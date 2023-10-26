@@ -35,9 +35,21 @@ Connected.
 
 ## Read heart rate from a herat rate belt via BLE
 
-An example to read heart rate from Magene's H64.  Change the device name or the address to specify your device.
+An example to read heart rate values (BPM) from [Magene's H64](https://support.magene.com/hc/en-us/categories/900000170623-H64-Heart-Rate-Sensor).  Change the device name ```_HR_SENSOR_NAME``` or the ```address``` to specify your device.
 
 ```python
+MicroPython v1.21.0 on 2023-10-05; Generic ESP32 module with ESP32
+Type "help()" for more information.
+>>>
+>>> import hr_read
+>>> hr_read.start()
+Connecting to Device(ADDR_RANDOM, d8:75:ba:50:32:6d)
+(2000, 1, 1, 6, 27, 59, 5, 1)	45
+(2000, 1, 1, 6, 28, 0, 5, 1)	45
+(2000, 1, 1, 6, 28, 1, 5, 1)	45
+(2000, 1, 1, 6, 28, 2, 5, 1)	46
+
+ ...
 
 ```
 
