@@ -10,7 +10,7 @@ The following examples were tested with micropython 1.21.0 with [aioble](https:/
 
 An example to read measured values from HIOKI's voltmeter, DT4261, via [Z3210 BLE interface](https://www.hioki.com/global/products/specialized-solutions/connecting-instruments/id_6780).
 Other mesurement tools of HIOKI equipped with the BLE interface may work (with/without a bit of modification).
-The ways (e.g. commands; references available from their website) to communicate with the tools are similar to those of USB (DT4900-01), RS232 and GPIB interfaces.
+The ways (e.g. commands; [references](https://www.hioki.com/global/support/download/software/versionup/detail/id_235) available from their website) to communicate with the tools are similar to those of USB ([DT4900-01](https://www.hioki.com/global/support/download/software/versionup/detail/id_235)), RS232 and GPIB interfaces.
 
 ```python
 MicroPython v1.21.0 on 2023-10-05; Generic ESP32 module with ESP32
