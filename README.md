@@ -13,8 +13,6 @@ Other mesurement tools of HIOKI equipped with the BLE interface may work (with/w
 The ways (e.g. commands; references available from their website) to communicate with the tools are similar to those of USB, RS232 and GPIB interfaces.
 
 ```python
-import hioki_z3210
-hioki_z3210.start()
 MicroPython v1.21.0 on 2023-10-05; Generic ESP32 module with ESP32
 Type "help()" for more information.
 >>>
