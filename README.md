@@ -1,9 +1,9 @@
 # micropython_aioble_examples
-A few aioble (asyncio BLE) examples of micropython using esp32
+A few aioble (asyncio BLE) examples of [micropython](https://micropython.org/) using esp32
 
 (C) 2023 [ekspla](https://github.com/ekspla/micropython_aioble_examples)
 
-The following examples were tested with micropython 1.21.0 with aioble on ESP32-DevKitC-32E.
+The following examples were tested with micropython 1.21.0 with [aioble](https://github.com/micropython/micropython-lib/tree/master/micropython/bluetooth/aioble) on ESP32-DevKitC-32E.
 
 
 ## Read measured voltages from [HIOKI](https://www.hioki.com/) voltmeter via BLE
