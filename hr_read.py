@@ -36,7 +36,7 @@ async def find_hr_sensor():
     # maximise detection rate).
     async with aioble.scan(5000, interval_us=30000, window_us=30000, active=True) as scanner:
         async for result in scanner:
-            # See if it matches our name and the environmental sensing service.
+            # See if it matches the name and the service of the heart rate seonsor.
             if result.name() == _HR_SENSOR_NAME and _HEART_RATE_SERVICE_UUID in result.services():
                 return result.device
     return None
