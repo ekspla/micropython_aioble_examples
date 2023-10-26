@@ -32,7 +32,7 @@ Connected.
  
 ```
 
-## Read heart rate from a herat rate belt via BLE
+## Read heart rate from a heart rate belt via BLE
 
 An example to read heart rate values (BPM) from [Magene's H64](https://support.magene.com/hc/en-us/categories/900000170623-H64-Heart-Rate-Sensor).  
 Change the device name ```_HR_SENSOR_NAME``` or the ```address``` to specify your device.  The code should work for most of the BLE heart-rate 
