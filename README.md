@@ -43,7 +43,7 @@ Type "help()" for more information.
 >>>
 >>> import hr_read
 >>> hr_read.start()
-Connecting to Device(ADDR_RANDOM, d8:75:ba:50:32:6d)
+Connecting to Device(ADDR_RANDOM, d8:75:ba:xx:yy:zz)
 (2000, 1, 1, 6, 27, 59, 5, 1)	45
 (2000, 1, 1, 6, 28, 0, 5, 1)	45
 (2000, 1, 1, 6, 28, 1, 5, 1)	45
