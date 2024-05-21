@@ -55,3 +55,78 @@ Connecting to Device(ADDR_RANDOM, d8:75:ba:xx:yy:zz)
 
 ```
 
+## Handling of connections to multiple peripherals and disconnect/reconnect
+
+Based on the codes of voltmeter and heart rate monitor as shown above, an example is shown.
+You may want to change the maximum allowed number of connections in bluetooth stack.  
+ESP32 ([ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/kconfig.html)) for example, 
+change either ```BT/BLE MAX ACL CONNECTIONS``` in menu or ```CONFIG_BT_ACL_CONNECTIONS``` in config (defalts to 4, 
+including scan and advertise).
+
+```
+Connecting to Device(ADDR_RANDOM, d8:75:ba:xx:yy:zz)             # This is the heart rate sensor, switched on.
+Connected. <DeviceConnection object at 3ffedf70>
+Connecting to Device(ADDR_PUBLIC, a4:9e:69:xx:yy:zz)             # This is the voltmeter DT4261, switched off.
+(2000, 1, 1, 7, 32, 27, 2, 143)        48 [bpm]
+(2000, 1, 1, 7, 32, 29, 2, 143)        48 [bpm]
+(2000, 1, 1, 7, 32, 30, 2, 143)        48 [bpm]
+(2000, 1, 1, 7, 32, 31, 2, 143)        48 [bpm]
+Timeout during connection
+(2000, 1, 1, 7, 32, 32, 2, 143)        48 [bpm]
+(2000, 1, 1, 7, 32, 34, 2, 143)        48 [bpm]
+(2000, 1, 1, 7, 32, 35, 2, 143)        48 [bpm]
+Connecting to Device(ADDR_PUBLIC, a4:9e:69:xx:yy:zz)             # Power on DT4261.
+Connected. <DeviceConnection object at 3fff1240>
+(2000, 1, 1, 7, 32, 37, 2, 143)        47 [bpm]
+(2000, 1, 1, 7, 32, 37, 2, 143)        DT4261;+0.00000000E+00
+(2000, 1, 1, 7, 32, 37, 2, 143)        47 [bpm]
+(2000, 1, 1, 7, 32, 38, 2, 143)        DT4261;+0.00000000E+00
+(2000, 1, 1, 7, 32, 38, 2, 143)        DT4261;+0.00000000E+00
+(2000, 1, 1, 7, 32, 39, 2, 143)        47 [bpm]
+(2000, 1, 1, 7, 32, 39, 2, 143)        DT4261;+0.00000000E+00
+(2000, 1, 1, 7, 32, 40, 2, 143)        DT4261;+0.00000000E+00
+(2000, 1, 1, 7, 32, 40, 2, 143)        47 [bpm]
+(2000, 1, 1, 7, 32, 40, 2, 143)        DT4261;-1.00000000E-04
+(2000, 1, 1, 7, 32, 41, 2, 143)        DT4261;-1.00000000E-04
+(2000, 1, 1, 7, 32, 41, 2, 143)        46 [bpm]
+(2000, 1, 1, 7, 32, 42, 2, 143)        DT4261;-1.00000000E-04
+(2000, 1, 1, 7, 32, 42, 2, 143)        DT4261;-1.00000000E-04
+(2000, 1, 1, 7, 32, 43, 2, 143)        46 [bpm]
+Error!                                                           # Power off DT4261.
+(2000, 1, 1, 7, 32, 44, 2, 143)        45 [bpm]
+(2000, 1, 1, 7, 32, 45, 2, 143)        45 [bpm]
+(2000, 1, 1, 7, 32, 46, 2, 143)        46 [bpm]
+Connecting to Device(ADDR_PUBLIC, a4:9e:69:xx:yy:zz)
+(2000, 1, 1, 7, 32, 48, 2, 143)        46 [bpm]
+(2000, 1, 1, 7, 32, 49, 2, 143)        45 [bpm]
+(2000, 1, 1, 7, 32, 51, 2, 143)        46 [bpm]
+(2000, 1, 1, 7, 32, 52, 2, 143)        45 [bpm]
+Timeout during connection
+(2000, 1, 1, 7, 32, 53, 2, 143)        45 [bpm]
+(2000, 1, 1, 7, 32, 55, 2, 143)        45 [bpm]
+(2000, 1, 1, 7, 32, 55, 2, 143)        45 [bpm]
+(2000, 1, 1, 7, 32, 57, 2, 143)        45 [bpm]
+Connecting to Device(ADDR_PUBLIC, a4:9e:69:xx:yy:zz)             # Power on DT4261 again.
+Connected. <DeviceConnection object at 3ffd3450>
+(2000, 1, 1, 7, 32, 58, 2, 143)        DT4261;+0.00000000E+00
+(2000, 1, 1, 7, 32, 58, 2, 143)        46 [bpm]
+(2000, 1, 1, 7, 32, 59, 2, 143)        DT4261;+0.00000000E+00
+(2000, 1, 1, 7, 32, 59, 2, 143)        DT4261;+0.00000000E+00
+(2000, 1, 1, 7, 33, 0, 2, 143)         46 [bpm]
+(2000, 1, 1, 7, 33, 0, 2, 143)         DT4261;+0.00000000E+00
+(2000, 1, 1, 7, 33, 1, 2, 143)         DT4261;-1.00000000E-04
+(2000, 1, 1, 7, 33, 1, 2, 143)         46 [bpm]
+(2000, 1, 1, 7, 33, 1, 2, 143)         DT4261;-1.00000000E-04
+(2000, 1, 1, 7, 33, 2, 2, 143)         DT4261;-1.00000000E-04
+(2000, 1, 1, 7, 33, 2, 2, 143)         45 [bpm]
+(2000, 1, 1, 7, 33, 3, 2, 143)         DT4261;-1.00000000E-04
+(2000, 1, 1, 7, 33, 3, 2, 143)         45 [bpm]
+(2000, 1, 1, 7, 33, 3, 2, 143)         DT4261;-1.00000000E-04
+(2000, 1, 1, 7, 33, 4, 2, 143)         DT4261;-1.00000000E-04
+main_hr closed                                                   # Stop the loop.
+(2000, 1, 1, 7, 33, 4, 2, 143)         DT4261;-1.00000000E-04
+main_4261 closed
+End.
+
+```
+
