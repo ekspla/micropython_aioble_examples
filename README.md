@@ -60,7 +60,7 @@ Connecting to Device(ADDR_RANDOM, d8:75:ba:xx:yy:zz)
 Based on the codes of voltmeter and heart rate monitor as shown above, an example is shown.
 You may want to change the maximum allowed number of connections in bluetooth stack.  
 ESP32 ([ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/kconfig.html)) for example, 
-change either ```BT/BLE MAX ACL CONNECTIONS``` in menu or ```CONFIG_BT_ACL_CONNECTIONS``` in config (defalts to 4, 
+change either ```BT/BLE MAX ACL CONNECTIONS``` in menu or ```CONFIG_BT_ACL_CONNECTIONS``` in config file (defaults to 4, 
 including scan and advertise).
 
 ```
