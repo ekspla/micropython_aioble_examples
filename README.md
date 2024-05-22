@@ -64,7 +64,7 @@ ESP32 ([ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api
 change either ```BT/BLE MAX ACL CONNECTIONS``` in menu or ```CONFIG_BT_ACL_CONNECTIONS``` in config file (defaults to 4, 
 including scan and advertise).
 
-If you have to find peripheral devices, write and use a loop of scan/connect/service-discovery to list the devices before you start.
+If you have to find peripheral devices, write and use a loop of scan/connect/service-discovery to list the target devices before you start.
 ```
 Connecting to Device(ADDR_RANDOM, d8:75:ba:xx:yy:zz)             # This is the heart rate sensor, switched on.
 Connected. <DeviceConnection object at 3ffedf70>
