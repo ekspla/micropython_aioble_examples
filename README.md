@@ -1,7 +1,7 @@
 # micropython_aioble_examples
 A few aioble (asyncio bluetooth low energy) examples of Micropython using ESP32
 
-(C) 2023 [ekspla](https://github.com/ekspla/micropython_aioble_examples)
+(C) 2023-2024 [ekspla](https://github.com/ekspla/micropython_aioble_examples)
 
 The following examples were tested with [micropython](https://micropython.org/) 1.21.0 and [aioble](https://github.com/micropython/micropython-lib/tree/master/micropython/bluetooth/aioble) on [ESP32-DevKitC-32E](https://www.espressif.com/en/products/devkits/esp32-devkitc).
 
@@ -64,7 +64,7 @@ ESP32 ([ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api
 change either ```BT/BLE MAX ACL CONNECTIONS``` in menu or ```CONFIG_BT_ACL_CONNECTIONS``` in config file (defaults to 4, 
 including scan and advertise).
 
-If you have to find peripheral devices, write and use a loop of scan/connect/service-discovery to list the target devices before you start.
+If you have to find peripheral devices, write and use a loop of scan/connect/service-discovery to list the target devices in the beginning.
 ```
 Connecting to Device(ADDR_RANDOM, d8:75:ba:xx:yy:zz)             # This is the heart rate sensor, switched on.
 Connected. <DeviceConnection object at 3ffedf70>
