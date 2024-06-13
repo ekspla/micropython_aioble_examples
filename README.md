@@ -7,7 +7,7 @@ The following examples were tested with [micropython](https://micropython.org/) 
 
 
 ## Read measured values from a [HIOKI](https://www.hioki.com/) voltmeter via BLE
-```hioki_z3210.py````
+```hioki_z3210.py```
 
 An example to read measured values from HIOKI's voltmeter, DT4261, via [Z3210 BLE interface](https://www.hioki.com/global/products/specialized-solutions/connecting-instruments/id_6780).
 Other mesurement tools of HIOKI equipped with the BLE interface may also work (with/without a bit of modification).
@@ -35,7 +35,7 @@ Connected.
 ```
 
 ## Read heart rate values from a heart rate sensor via BLE
-```hr_read.py````
+```hr_read.py```
 
 An example to read heart rate values (BPM) from [Magene's H64](https://support.magene.com/hc/en-us/categories/900000170623-H64-Heart-Rate-Sensor).  
 Change the device name ```_HR_SENSOR_NAME``` or the ```address``` to specify your device.  The code should work for most of the BLE heart-rate 
@@ -58,7 +58,7 @@ Connecting to Device(ADDR_RANDOM, d8:75:ba:xx:yy:zz)
 ```
 
 ## Handling of connections to multiple peripherals and disconnect/reconnect
-```conn_multiple.py````
+```conn_multiple.py```
 
 Based on the codes of voltmeter and heart rate monitor, an example is shown.
 
