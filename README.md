@@ -64,7 +64,7 @@ Based on the codes of voltmeter and heart rate monitor, an example is shown.
 
 You may want to change the maximum allowed number of connections in bluetooth stack.  
 ESP32_GENERIC ([ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/kconfig.html)) for example, 
-change ```CONFIG_BT_NIMBLE_MAX_CONNECTIONS``` and ```CONFIG_BTDM_CTRL_BLE_MAX_CONN``` in config file (defaults to 4 and 3, 
+change ```CONFIG_BT_NIMBLE_MAX_CONNECTIONS``` and ```CONFIG_BTDM_CTRL_BLE_MAX_CONN``` in config file (default to 4 and 3, 
 respectively).
 
 If you have to find peripheral devices, write and use a loop of scan/connect/service-discovery to list the target devices in the beginning.
