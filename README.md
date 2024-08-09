@@ -135,3 +135,48 @@ End.
 
 ```
 
+## How can we handle successive notified packets as a client using aioble?
+(A link to discussion of this topic can be found 
+[here](https://github.com/orgs/micropython/discussions/15544).)
+
+In the current version of ```aioble/client.py```, a data of a notified 
+packet can be overwritten by those of the successive notified packets in 
+the queue to which the data are appended.  This is because the size of the 
+queue by default is 1:  ```self._notify_queue = deque((), 1)```
+
+So *a ```while True:``` loop* with *a ```charateristic.notified()```* 
+shown in the official examples, as well as ```hr_read.py``` shown above, are not 
+neccessarily useful; **notified packets should be well separated in time**.
+
+Though I do not know exactly what is the future plan of the developpers to 
+solve the issue, there is a comment in ```aioble/client.py``` as follows:
+```
+# Append the data. By default this is a deque with max-length==1, so it
+# replaces. But if capture is enabled then it will append.
+```
+
+As a workaround for Nordic UART client in [mpy_xoss_sync.py](https://github.com/ekspla/xoss_sync), 
+I changed the size of the queue and retrieved the accumulated notified data as followings 
+(the real working code presented in the above link).
+``` python
+buffer = bytearray()
+async with connection:
+    service = await connection.service(_SERVICE_UUID) # A Nordic UART Service.
+    tx_characteristic = await service.characteristic(_TX_CHARACTERISTIC_UUID)
+    rx_characteristic = await service.characteristic(_RX_CHARACTERISTIC_UUID)
+    tx_characteristic._notify_queue = deque((), 7) # Change the size of the queue.
+    await self.tx_characteristic.subscribe(notify=True)
+
+    while True:
+         await request_transport(rx_characteristic) # Send command to request transport.
+         data = await tx_characteristic.notified()
+         buffer.extend(data)
+         while len(queue := tx_characteristic._notify_queue) >= 1:
+             buffer.extend(queue.popleft())
+
+         # Do something with the buffer.
+```
+
+This workaround is useful in this case because the server (peripheral) is always waiting 
+for the response from the client (micropython/aioble) and this waiting time can be used 
+to processs the data in the queue.
