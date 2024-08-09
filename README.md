@@ -178,6 +178,6 @@ async with connection:
          # Do something with the buffer.
 ```
 
-This workaround is useful in this case because the server (peripheral) is always waiting 
-for the response from the client (micropython/aioble) and this waiting time can be used 
+The workaround is useful in this case because the server (peripheral) is always waiting 
+for the response from the client (micropython/aioble) and the waiting time can be used 
 to processs the data in the queue.
