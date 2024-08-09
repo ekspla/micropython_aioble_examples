@@ -170,6 +170,7 @@ async with connection:
     while True:
          await request_transport(rx_characteristic) # Send command to request transport.
          data = await tx_characteristic.notified()
+         await asyncio.sleep(1) # Wait until the queue is filled.
          buffer.extend(data)
          while len(queue := tx_characteristic._notify_queue) >= 1:
              buffer.extend(queue.popleft())
