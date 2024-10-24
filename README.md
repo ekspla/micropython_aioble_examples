@@ -174,6 +174,7 @@ async with connection:
          buffer.extend(data)
          while len(queue := tx_characteristic._notify_queue) >= 1:
              buffer.extend(queue.popleft())
+         tx_characteristic._notify_event.clear() # Make sure to clear the flag.
 
          # Do something with the buffer.
 ```
