@@ -179,16 +179,16 @@ async with connection:
          # Do something with the buffer.
 ```
 
-The workaround is useful in this case because the server (peripheral) is always waiting 
-for the response from the client (micropython/aioble) and the waiting time can be used 
-to processs the data in the queue.
+The workaround is useful in this case because the server (peripheral) always waits for the response of the 
+data from the client (micropython/aioble) before going to the next, and this waiting time can be used to 
+processs the data in the queue.
 
 
-A pair of test codes, ```nus_modem_client.py``` and ```nus_modem_server.py```, were prepared for the complete 
-working example.  In this case, a primitive Y-MODEM protocol was implemented on Nordic UART service using 
+A pair of test codes, ```nus_modem_client.py``` and ```nus_modem_server.py```, were prepared as the complete 
+working example.  In this case, a primitive YMODEM protocol was implemented on Nordic UART service using 
 TX/RX channels.  Athough there are limitation as described below, it works well as expected and has been 
-already applied to [my project](https://github.com/ekspla/xoss_sync).
+already applied to [one of my projects](https://github.com/ekspla/xoss_sync).
 
 The limitations are due mainly to the implementation of YMODEM in part as follows:
 - The script expects a transport with MTU of 23, 128-byte data per block, and CRC16/ARC (not CRC16/XMODEM).
-Larger MTU/1024-byte data in YMODEM (STX) are not supported (not implemented).
+Larger MTU by DLE and 1024-byte data in YMODEM (STX) are not supported (not implemented yet).
