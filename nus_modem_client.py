@@ -139,7 +139,6 @@ class NUSModemClient:
         self.is_block = True
         self.block_error = False
         await self.send_cmd(self.rx_characteristic, VALUE_C, 100)                     # Send 'C'.
-        print("Send 'C'.")
         await self.read_block()
 
     async def read_block(self):
