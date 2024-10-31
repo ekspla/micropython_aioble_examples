@@ -184,7 +184,7 @@ for the response from the client (micropython/aioble) and the waiting time can b
 to processs the data in the queue.
 
 
-A pair of test codes, ```nus_modem_client.py and ```nus_modem_server.py```, were prepared for the complete 
+A pair of test codes, ```nus_modem_client.py``` and ```nus_modem_server.py```, were prepared for the complete 
 working example.  In this case, a primitive Y-MODEM protocol was implemented on Nordic UART service using 
 TX/RX channels.  Athough there are limitation as described below, it works well as expected and has been 
 already applied to [my project](https://github.com/ekspla/xoss_sync).
