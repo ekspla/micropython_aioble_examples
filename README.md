@@ -148,15 +148,15 @@ So *a ```while True:``` loop* with *a ```charateristic.notified()```*
 shown in the official examples, as well as ```hr_read.py``` shown above, are not 
 neccessarily useful; **notified packets should be well separated in time**.
 
-Though I do not know exactly what is the future plan of the developpers to 
+Though I do not know exactly what is the future plan of the developers to 
 solve the issue, there is a comment in ```aioble/client.py``` as follows:
 ```
 # Append the data. By default this is a deque with max-length==1, so it
 # replaces. But if capture is enabled then it will append.
 ```
 
-As a workaround for Nordic UART client in [mpy_xoss_sync.py](https://github.com/ekspla/xoss_sync), 
-I changed the size of the queue and retrieved the accumulated notified data as followings.
+As a workaround for Nordic UART client used in [mpy_xoss_sync.py](https://github.com/ekspla/xoss_sync), 
+I changed the size of the queue and retrieved the accumulated notified data from the queue as followings.
 ``` python
 buffer = bytearray()
 async with connection:
@@ -179,15 +179,21 @@ async with connection:
 ```
 
 The workaround is useful in this case because the server (peripheral) always waits for the response of the 
-data from the client (micropython/aioble) before going to the next, and this waiting time can be used to 
-processs the data in the queue.
+chunk of data from the client (micropython/aioble) before going to the next, and this waiting time can be used 
+to processs (e.g. concatinate) the data in the queue.
 
 
 A pair of test codes, ```nus_modem_client.py``` and ```nus_modem_server.py```, were prepared as the complete 
-working example.  In this case, a primitive YMODEM protocol was implemented on Nordic UART service using 
-TX/RX channels.  Athough there are limitation as described below, it works well as expected and has been 
+set of working example.  In this case, a primitive YMODEM file transfer protocol was implemented on 
+[Nordic UART service](https://docs.nordicsemi.com/bundle/ncs-latest/page/nrf/libraries/bluetooth_services/services/nus.html) 
+as TX/RX channels.  Athough there are limitations as described below, it works well as expected and has been 
 already applied to [one of my projects](https://github.com/ekspla/xoss_sync).
+
+The throughput measured was 27.7 kbps using 7.5 ms connection interval and tick rate of 1 ms (CONFIG_FREERTOS_HZ=1000) 
+with ESP32-S3-WROOM-1-N16R8 and micro-SD card, while the theoretical limit assuming 3 connection events/128-byte data block 
+is 45.5 kbps.
 
 The limitations are due mainly to the implementation of YMODEM in part as follows:
 - The script expects a transport with MTU of 23, 128-byte data per block, and CRC16/ARC (not CRC16/XMODEM).
-Larger MTU by DLE and 1024-byte data in YMODEM (STX) are not supported (not implemented yet).
+Larger MTU by DLE (Data Length Extension) and 1024-byte data in YMODEM (STX), that make throughput higher, are not 
+supported (not implemented yet).
