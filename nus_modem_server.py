@@ -43,7 +43,6 @@ class NUSModemServer:
         self.rx_characteristic = aioble.Characteristic(
             nus_service, _NUS_RX_CHARACTERISTIC_UUID, write=True, write_no_response=True, 
             capture=True, 
-            #nus_service, _NUS_RX_CHARACTERISTIC_UUID, write=True, 
         )
         # Server (Peripheral) -> Client (Central)
         self.tx_characteristic = aioble.BufferedCharacteristic(
