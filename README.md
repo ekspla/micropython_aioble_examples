@@ -191,4 +191,4 @@ already applied to [my project](https://github.com/ekspla/xoss_sync).
 
 The limitations are due mainly to the implementation of YMODEM in part as follows:
 - The script expects a transport with MTU of 23, 128-byte data per block, and CRC16/ARC (not CRC16/XMODEM).
-Larger MTU/1024-byte data in YMODEM (STX) are not supported (implemented).
+Larger MTU/1024-byte data in YMODEM (STX) are not supported (not implemented).
