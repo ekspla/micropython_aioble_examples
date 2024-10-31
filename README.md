@@ -156,8 +156,7 @@ solve the issue, there is a comment in ```aioble/client.py``` as follows:
 ```
 
 As a workaround for Nordic UART client in [mpy_xoss_sync.py](https://github.com/ekspla/xoss_sync), 
-I changed the size of the queue and retrieved the accumulated notified data as followings 
-(the real working code presented in the above link).
+I changed the size of the queue and retrieved the accumulated notified data as followings.
 ``` python
 buffer = bytearray()
 async with connection:
