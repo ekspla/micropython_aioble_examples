@@ -23,7 +23,7 @@ _NUS_TX_CHARACTERISTIC_UUID = bluetooth.UUID("6e400003-b5a3-f393-e0a9-e50e24dcca
 _ADV_APPEARANCE_GENERIC_COMPUTER = const(128)
 
 # How frequently to send advertising beacons.
-_ADV_INTERVAL_MS = const(250_000)
+_ADV_INTERVAL_US = const(250_000)
 
 VALUE_SOH = bytearray([0x01])                             # SOH == 128-byte data
 #VALUE_STX = bytearray([0x02])                             # STX == 1024-byte data
@@ -107,7 +107,7 @@ class NUSModemServer:
     async def main(self):
         while True:
             async with await aioble.advertise(
-                _ADV_INTERVAL_MS,
+                _ADV_INTERVAL_US,
                 name="mpy-nus",
                 services=[_NUS_SERVICE_UUID],
                 appearance=_ADV_APPEARANCE_GENERIC_COMPUTER,
