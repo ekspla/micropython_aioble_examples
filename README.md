@@ -146,7 +146,7 @@ queue by default is 1:  ```self._notify_queue = deque((), 1)```
 
 So *a ```while True:``` loop* with *a ```charateristic.notified()```* 
 shown in the official examples, as well as ```hr_read.py``` shown above, are not 
-neccessarily useful; **notified packets should be well separated in time**.
+necessarily useful; **notified packets should be well separated in time**.
 
 Though I do not know exactly what is the future plan of the developers to 
 solve the issue, there is a comment in ```aioble/client.py``` as follows:
@@ -180,13 +180,13 @@ async with connection:
 
 The workaround is useful in this case because the server (peripheral) always waits for the response of the 
 chunk of data from the client (micropython/aioble) before going to the next, and this waiting time can be used 
-to processs (e.g. concatinate) the data in the queue.
+by the client to processs (e.g. concatinate) the data in the queue.
 
 
 A pair of test codes, ```nus_modem_client.py``` and ```nus_modem_server.py```, were prepared as the complete 
 set of working example.  In this case, a primitive YMODEM file transfer protocol was implemented on 
-[Nordic UART service](https://docs.nordicsemi.com/bundle/ncs-latest/page/nrf/libraries/bluetooth_services/services/nus.html) 
-as TX/RX channels.  Athough there are limitations as described below, it works well as expected and has been 
+[Nordic UART service's](https://docs.nordicsemi.com/bundle/ncs-latest/page/nrf/libraries/bluetooth_services/services/nus.html) 
+TX/RX channels.  Athough there are limitations as described below, it works well as expected and has been 
 already applied to [one of my projects](https://github.com/ekspla/xoss_sync).
 
 The throughput measured was 27.7 kbps using 7.5 ms connection interval and tick rate of 1 ms (CONFIG_FREERTOS_HZ=1000) 
