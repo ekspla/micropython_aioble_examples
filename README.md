@@ -180,7 +180,7 @@ async with connection:
 
 The workaround is useful in this case because the server (peripheral) always waits for the response of the 
 chunk of data from the client (micropython/aioble) before going to the next, and this waiting time can be used 
-by the client to processs (e.g. concatinate) the data in the queue.
+by the client to process (e.g. concatinate) the data in the queue.
 
 
 A pair of test codes, ```nus_modem_client.py``` and ```nus_modem_server.py```, were prepared as the complete 
