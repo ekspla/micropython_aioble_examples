@@ -1,7 +1,7 @@
 # (c) 2024 ekspla.
 # MIT License.  https://github.com/ekspla/micropython_aioble_examples
 #
-# An example pair of codes using Y-MODEM/Nordic UART Service.
+# An example pair of codes using YMODEM/Nordic UART Service.
 
 import sys
 

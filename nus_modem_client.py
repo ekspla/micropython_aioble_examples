@@ -1,7 +1,8 @@
 # (c) 2024 ekspla.
 # MIT License.  https://github.com/ekspla/micropython_aioble_examples
 #
-# An example pair of codes using Y-MODEM/Nordic UART Service.
+# An example pair of codes using YMODEM/Nordic UART Service.
+# Requires micropython-lib/aioble after [commit 68e3e07](https://github.com/micropython/micropython-lib/commit/68e3e07bc7ab63931cead3854b2a114e9a084248)
 
 import sys
 
@@ -268,7 +269,9 @@ class NUSModemClient:
 
         try:
             print("Connecting to", device)
-            connection = await device.connect()
+            connection = await device.connect(
+                timeout_ms=60_000, 
+                scan_duration_ms=5_000, min_conn_interval_us=7_500, max_conn_interval_us=7_500)
         except asyncio.TimeoutError:
             print("Timeout during connection")
             return
