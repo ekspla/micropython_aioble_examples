@@ -200,7 +200,8 @@ supported (not implemented yet).
 
 ## ESP32 chip as a USB BLE dongle (HCI H4) for use with unix-port (Linux) of micropython
 
-A cheap USB BLE dongle was easily built by using an ESP32, a USB-UART chip (CH340E) and a 600-mA LDO (RT9080). 
+A cheap USB BLE dongle was easily built by using an ESP32, a USB-UART chip ([CH340E](https://www.wch.cn/search?t=all&q=CH340E)) 
+and a 600-mA LDO ([RT9080](https://www.richtek.com/Products/Linear%20Regulator/Single%20Output%20Linear%20Regulator/RT9080?sc_lang=en)). 
 As shown in the figures below, I tried to reduce the lengths of the cables as short as possible to obtain the 
 highest reliable UART connections.  USB-UART/LDO built on frontside and ESP32 mounted on backside were sticked together to form the 
 home-made USB dongle. 
@@ -208,14 +209,15 @@ home-made USB dongle.
 ![PHOTO_BACKSIDE_ESP32](https://github.com/ekspla/micropython_aioble_examples/blob/main/figs/Backside_ESP32.jpg "Backside")
 
 The firmware on the ESP32, which was written through the pin sockets in the photo above, was built on `controller_hci_uart_esp32` 
-example of ESP-IDF with the following parameters.
+example of Espressif's ESP-IDF with the following parameters.
 
 UART baudrate = 1_000_000 bps; 
-Hardware flow control; 
+hardware flow control; 
 FreeRTOS tick rate = 1 ms; 
 GPIO pins 5, 18, 23, 19 are used as TxD, RxD, CTS, RTS, respectively.
 
 I had to modify the codes as followings to set the parameters as above.
+
 Modify `ESP-IDF/components/bt/controller/esp32/Kconfig.in`:
 ``` Diff
     config BTDM_CTRL_HCI_UART_BAUDRATE
@@ -272,6 +274,6 @@ True
 >>> 
 ```
 
-This dongle/unix-port MPY pair was successfully used with my test code 
+This dongle/unix-port MPY pair was successfully used with my test code, 
 [nus_modem_client.py](https://github.com/ekspla/micropython_aioble_examples/blob/main/nus_modem_client.py), 
 in this repository.
