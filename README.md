@@ -198,9 +198,9 @@ The limitations are due mainly to the implementation of YMODEM in part as follow
 Larger MTU by DLE (Data Length Extension) and 1024-byte data in YMODEM (STX), that make throughput higher, are not 
 supported (not implemented yet).
 
-## ESP32 chip as a USB BLE dongle (HCI H4) for use with unix-port (Linux) of micropython
+## ESP32 chip as a USB bluetooth dongle (HCI H4) for use with unix-port (Linux) of micropython and aioble
 
-A cheap USB BLE dongle was easily built by using an ESP32, a USB-UART chip ([CH340E](https://www.wch.cn/search?t=all&q=CH340E)) 
+A cheap USB bluetooth dongle was easily built by using an ESP32, a USB-UART chip ([CH340E](https://www.wch.cn/search?t=all&q=CH340E)) 
 and a 600-mA LDO ([RT9080](https://www.richtek.com/Products/Linear%20Regulator/Single%20Output%20Linear%20Regulator/RT9080?sc_lang=en)). 
 As shown in the figures below, I tried to reduce the lengths of the cables as short as possible to obtain the 
 highest reliable UART connections.  USB-UART/LDO built on frontside and ESP32 mounted on backside were sticked together to form the 
