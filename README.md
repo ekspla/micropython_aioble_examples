@@ -208,7 +208,7 @@ home-made USB dongle.
 ![PHOTO_FRONTSIDE_CH340_LDO](https://github.com/ekspla/micropython_aioble_examples/blob/main/figs/Frontside_CH340_LDO.jpg "Frontside")
 ![PHOTO_BACKSIDE_ESP32](https://github.com/ekspla/micropython_aioble_examples/blob/main/figs/Backside_ESP32.jpg "Backside")
 
-The firmware on the ESP32, which was written through the pin sockets in the photo above, was built on `controller_hci_uart_esp32` 
+The firmware on the ESP32, which was written through the pin sockets shown in the photo above, was built on `controller_hci_uart_esp32` 
 example of Espressif's ESP-IDF with the following parameters.
 
 UART baudrate = 1_000_000 bps; 
