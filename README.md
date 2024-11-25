@@ -278,3 +278,7 @@ True
 This dongle/unix-port MPY pair was successfully used with my aioble test code, 
 [nus_modem_client.py](https://github.com/ekspla/micropython_aioble_examples/blob/main/nus_modem_client.py), 
 in this repository.
+
+- Additional notes
+You can also use this USB dongle from the other softwares than MPY/aioble such as [BlueZ](https://github.com/bluez/bluez) and 
+[Google Bumble](https://github.com/google/bumble) because the APIs of HCI H4 are common.
