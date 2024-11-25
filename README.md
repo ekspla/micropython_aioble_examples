@@ -246,7 +246,7 @@ CONFIG_FREERTOS_HZ=1000
 Run `idf.py menuconfig`, then `idf.py build`.
 
 To use the other baudrate, you have to modify it also in `MPY/ports/unix/mpbthciport.c`, which defaults to 1 Mbps. 
-Because I could not obtain a reliable connections at 1.5, 2 and 3 M bps, the baudrate was set to 1 Mbps in my case.
+Because I could not obtain reliable connections at 1.5, 2 and 3 M bps, the baudrate was set to 1 Mbps in my case.
 
 [The MPY on Linux machine using NimBLE stack was built](https://github.com/orgs/micropython/discussions/10234) as 
 follows: 
