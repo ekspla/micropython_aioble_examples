@@ -214,6 +214,7 @@ example of Espressif's ESP-IDF with the following parameters.
 UART baudrate = 1_000_000 bps; 
 hardware flow control; 
 FreeRTOS tick rate = 1 ms; 
+CPU frequency = 240 MHz; 
 GPIO pins 5, 18, 23, 19 are used as TxD, RxD, CTS, RTS, respectively.
 
 I had to modify the codes as followings to set the parameters as above.
@@ -274,6 +275,6 @@ True
 >>> 
 ```
 
-This dongle/unix-port MPY pair was successfully used with my test code, 
+This dongle/unix-port MPY pair was successfully used with my aioble test code, 
 [nus_modem_client.py](https://github.com/ekspla/micropython_aioble_examples/blob/main/nus_modem_client.py), 
 in this repository.
