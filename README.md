@@ -246,21 +246,22 @@ Run `idf.py menuconfig`, then `idf.py build`.
 To use the other baudrate, you have to modify it also in `MPY/ports/unix/mpbthciport.c`, which defaults to 1 Mbps. 
 Because I could not obtain a reliable connections at 1.5, 2 and 3 M bps, the baudrate was set to 1 Mbps in my case.
 
-[The MPY on Linux machine using NimBLE stack was built]((https://github.com/orgs/micropython/discussions/10234)) as 
+[The MPY on Linux machine using NimBLE stack was built](https://github.com/orgs/micropython/discussions/10234) as 
 follows: 
 ``` Shell
 make -C ports/unix MICROPY_PY_BLUETOOTH=1 MICROPY_BLUETOOTH_NIMBLE=1
 ```
 
-Because the built-in kernel USB-UART module did not work reliably, I had to compile the module of USB-UART chip from 
+Because the built-in kernel USB-UART module did not work reliably at a very high speed, I had to compile the module of 
+USB-UART chip from 
 [the source code of the manufacturer](http://www.wch.cn/download/CH341SER_LINUX_ZIP.html). 
-Before start using it, set appropriate permission of the USB-UART device you are using (e.g. chomod 666 or adduser to 
-the dialout group).
+Before start using it, set an appropriate permission of the USB-UART device you are using (e.g. `chomod 666` or `adduser` 
+to the `dialout` group).
 
 You may have to specify the USB-UART device if it is not `/dev/ttyUSB0` as written in `ports/unix/mpbthciport.c`.
 
 In my case:
-``` Shell
+``` Python
 MICROPYBTUART=/dev/ttyCH341USB0 micropython
 MicroPython v1.23.0 on 2024-11-18; linux [GCC 11.5.0] version
 Use Ctrl-D to exit, Ctrl-E for paste mode
@@ -271,4 +272,6 @@ True
 >>> 
 ```
 
-This dongle/unix-port MPY pair was successfully used with my test code `nus_modem_client.py`, in this repository.
+This dongle/unix-port MPY pair was successfully used with my test code 
+[nus_modem_client.py](https://github.com/ekspla/micropython_aioble_examples/blob/main/nus_modem_client.py), 
+in this repository.
