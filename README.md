@@ -197,3 +197,78 @@ The limitations are due mainly to the implementation of YMODEM in part as follow
 - The script expects a transport with MTU of 23, 128-byte data per block, and CRC16/ARC (not CRC16/XMODEM).
 Larger MTU by DLE (Data Length Extension) and 1024-byte data in YMODEM (STX), that make throughput higher, are not 
 supported (not implemented yet).
+
+## ESP32 chip as a USB BLE dongle (HCI H4) for use with unix-port (Linux) of micropython
+
+A cheap USB BLE dongle was easily built by using an ESP32, a USB-UART chip (CH340E) and a 600-mA LDO (RT9080). 
+As shown in the figures below, I tried to reduce the lengths of the cables as short as possible to obtain the 
+highest reliable UART connections.  USB-UART/LDO built on frontside and ESP32 mounted on backside were sticked together to form the 
+home-made USB dongle. 
+![PHOTO_FRONTSIDE_CH340_LDO](https://github.com/ekspla/micropython_aioble_examples/blob/main/figs/Frontside_CH340_LDO.jpg "Frontside")
+![PHOTO_BACKSIDE_ESP32](https://github.com/ekspla/micropython_aioble_examples/blob/main/figs/Backside_ESP32.jpg "Backside")
+
+The firmware on the ESP32, which was written through the pin sockets in the photo above, was built on `controller_hci_uart_esp32` 
+example of ESP-IDF with the following parameters.
+
+UART baudrate = 1_000_000 bps; 
+Hardware flow control; 
+FreeRTOS tick rate = 1 ms; 
+GPIO pins 5, 18, 23, 19 are used as TxD, RxD, CTS, RTS, respectively.
+
+I had to modify the codes as followings to set the parameters as above.
+Modify `ESP-IDF/components/bt/controller/esp32/Kconfig.in`:
+``` Diff
+    config BTDM_CTRL_HCI_UART_BAUDRATE
+        int "UART Baudrate for HCI"
+        depends on BTDM_CTRL_HCI_MODE_UART_H4
+-       range 115200 921600
+-       default 921600
++       range 115200 3000000
++       default 1000000
+        help
+```
+Modify `sdkconfig.defaults`:
+```
+CONFIG_BT_BLUEDROID_ENABLED=n
+CONFIG_BT_CONTROLLER_ONLY=y
+CONFIG_BTDM_CTRL_HCI_MODE_UART_H4=y
+CONFIG_BTDM_CTRL_HCI_UART_NO=1
+CONFIG_BTDM_CTRL_HCI_UART_BAUDRATE=1000000
+CONFIG_BTDM_CTRL_MODEM_SLEEP=n
+
+# Other config
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_240=y
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ=240
+CONFIG_FREERTOS_HZ=1000
+```
+Run `idf.py menuconfig`, then `idf.py build`.
+
+To use the other baudrate, you have to modify it also in `MPY/ports/unix/mpbthciport.c`, which defaults to 1 Mbps. 
+Because I could not obtain a reliable connections at 1.5, 2 and 3 M bps, the baudrate was set to 1 Mbps in my case.
+
+[The MPY on Linux machine using NimBLE stack was built]((https://github.com/orgs/micropython/discussions/10234)) as 
+follows: 
+``` Shell
+make -C ports/unix MICROPY_PY_BLUETOOTH=1 MICROPY_BLUETOOTH_NIMBLE=1
+```
+
+Because the built-in kernel USB-UART module did not work reliably, I had to compile the module of USB-UART chip from 
+[the source code of the manufacturer](http://www.wch.cn/download/CH341SER_LINUX_ZIP.html). 
+Before start using it, set appropriate permission of the USB-UART device you are using (e.g. chomod 666 or adduser to 
+the dialout group).
+
+You may have to specify the USB-UART device if it is not `/dev/ttyUSB0` as written in `ports/unix/mpbthciport.c`.
+
+In my case:
+``` Shell
+MICROPYBTUART=/dev/ttyCH341USB0 micropython
+MicroPython v1.23.0 on 2024-11-18; linux [GCC 11.5.0] version
+Use Ctrl-D to exit, Ctrl-E for paste mode
+>>> from bluetooth import BLE
+>>> BLE().active(1)
+True
+>>> import aioble
+>>> 
+```
+
+This dongle/unix-port MPY pair was successfully used with my test code `nus_modem_client.py`, in this repository.
