@@ -211,7 +211,7 @@ home-made USB dongle.
 The firmware on the ESP32, which was written through the pin sockets shown in the photo above, was built on `controller_hci_uart_esp32` 
 example of Espressif's ESP-IDF with the following parameters.
 
-UART baudrate = 1_000_000 bps; 
+UART baudrate = 1 Mbps; 
 hardware flow control; 
 FreeRTOS tick rate = 1 ms; 
 CPU frequency = 240 MHz; 
@@ -261,7 +261,7 @@ or from [their github repository](https://github.com/WCHSoftGroup/ch341ser_linux
 Before start using it, set an appropriate permission of the USB-UART device you are using (e.g. `chomod 666` or `adduser` 
 to the `dialout` group).
 
-You may have to specify the USB-UART device if it is not `/dev/ttyUSB0` as written in `ports/unix/mpbthciport.c`.
+You have to specify the USB-UART device if it is not `/dev/ttyUSB0` as written in `ports/unix/mpbthciport.c`.
 
 In my case:
 ``` Python
