@@ -203,7 +203,7 @@ supported (not implemented yet).
 A cheap USB bluetooth dongle was easily built by using an ESP32, a USB-UART chip ([CH340E](https://www.wch.cn/search?t=all&q=CH340E)) 
 and a 600-mA LDO ([RT9080](https://www.richtek.com/Products/Linear%20Regulator/Single%20Output%20Linear%20Regulator/RT9080?sc_lang=en)). 
 As shown in the figures below, I tried to reduce the lengths of the cables as short as possible to obtain the 
-highest reliable UART connections.  USB-UART/LDO built on frontside and ESP32 mounted on backside were sticked together to form the 
+highest reliable speed.  USB-UART/LDO built on frontside and ESP32 mounted on backside were sticked together to form the 
 home-made USB dongle. 
 ![PHOTO_FRONTSIDE_CH340_LDO](https://github.com/ekspla/micropython_aioble_examples/blob/main/figs/Frontside_CH340_LDO.jpg "Frontside")
 ![PHOTO_BACKSIDE_ESP32](https://github.com/ekspla/micropython_aioble_examples/blob/main/figs/Backside_ESP32.jpg "Backside")
