@@ -275,7 +275,7 @@ True
 >>> 
 ```
 
-This dongle/unix-port MPY pair was successfully used with my aioble test code, 
+This dongle/unix-port MPY combination was successfully used with my aioble test code, 
 [nus_modem_client.py](https://github.com/ekspla/micropython_aioble_examples/blob/main/nus_modem_client.py), 
 in this repository.
 
