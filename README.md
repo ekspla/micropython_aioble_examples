@@ -256,7 +256,7 @@ make -C ports/unix MICROPY_PY_BLUETOOTH=1 MICROPY_BLUETOOTH_NIMBLE=1
 ```
 
 Because the built-in USB-UART kernel module did not work reliably at a very high speed, I had to compile the module 
-using the latest source code of the manufacturer obtained from [their website](http://www.wch.cn/download/CH341SER_LINUX_ZIP.html) 
+using the latest source code (V1.8 On 2024.08) of the manufacturer obtained from [their website](http://www.wch.cn/download/CH341SER_LINUX_ZIP.html) 
 or from [their github repository](https://github.com/WCHSoftGroup/ch341ser_linux). 
 Before start using it, set an appropriate permission of the USB-UART device you are using (e.g. `chomod 666` or `adduser` 
 to the `dialout` group).
