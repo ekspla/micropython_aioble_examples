@@ -1,20 +1,26 @@
 # micropython_aioble_examples
-A few aioble (asyncio bluetooth low energy) examples of Micropython using ESP32
+A few aioble (asyncio bluetooth low energy) examples of MicroPython using ESP32
 
-(C) 2023-2024 [ekspla](https://github.com/ekspla/micropython_aioble_examples)
+(C) 2023-2025 [ekspla](https://github.com/ekspla/micropython_aioble_examples)
 
-The following examples were tested with [micropython](https://micropython.org/) 1.21.0-1.23.0 and [aioble](https://github.com/micropython/micropython-lib/tree/master/micropython/bluetooth/aioble) on [ESP32-DevKitC-32E](https://www.espressif.com/en/products/devkits/esp32-devkitc).
+The following examples were tested with [MicroPython](https://micropython.org/) 1.21.0-1.23.0 and 
+[aioble](https://github.com/micropython/micropython-lib/tree/master/micropython/bluetooth/aioble) on 
+[ESP32-DevKitC-32E](https://www.espressif.com/en/products/devkits/esp32-devkitc).
 
 
 ## Read measured values from a [HIOKI](https://www.hioki.com/) voltmeter via BLE
 ```hioki_z3210.py```
 
-An example to read measured values from HIOKI's voltmeter, DT4261, via [Z3210 BLE interface](https://www.hioki.com/global/products/specialized-solutions/connecting-instruments/id_6780).
+An example to read measured values from HIOKI's voltmeter, DT4261, via 
+[Z3210 BLE interface](https://www.hioki.com/global/products/specialized-solutions/connecting-instruments/id_6780).
 Other mesurement tools of HIOKI equipped with the BLE interface may also work (with/without a bit of modification).
-Though the ways (e.g. commands; [references](https://www.hioki.com/global/support/download/software/versionup/detail/id_235) available from their website) to communicate with the tools are similar to those of USB ([DT4900-01](https://www.hioki.com/global/support/download/software/versionup/detail/id_235)), RS232 and GPIB interfaces, 
+Though the ways (e.g. commands; [references](https://www.hioki.com/global/support/download/software/versionup/detail/id_235) 
+available from their website) to communicate with the tools are similar to those of 
+USB ([DT4900-01](https://www.hioki.com/global/support/download/software/versionup/detail/id_235)), RS232 and GPIB interfaces, 
 I found this BLE interface very useful in probing hazardous high voltages/currents at a safe place because of the wireless nature.  
 
-I feel like using a home-built tiny display device equipped with an ESP32 is more convenient than using HIOKI's proprietary software with a smartphone.
+I feel like using a home-built tiny display device equipped with an ESP32 is more convenient than using HIOKI's proprietary 
+software with a smartphone.
 
 ```python
 MicroPython v1.21.0 on 2023-10-05; Generic ESP32 module with ESP32
@@ -37,9 +43,10 @@ Connected.
 ## Read heart rate values from a heart rate sensor via BLE
 ```hr_read.py```
 
-An example to read heart rate values (BPM) from [Magene's H64](https://support.magene.com/hc/en-us/categories/900000170623-H64-Heart-Rate-Sensor).  
-Change the device name ```_HR_SENSOR_NAME``` or the ```address``` to specify your device.  The code should work for most of the BLE heart-rate 
-sensors because the service and the characteristics are common.
+An example to read heart rate values (BPM) from 
+[Magene's H64](https://support.magene.com/hc/en-us/categories/900000170623-H64-Heart-Rate-Sensor).  
+Change the device name ```_HR_SENSOR_NAME``` or the ```address``` to specify your device.  The code should work for most 
+of the BLE heart-rate sensors because the service and the characteristics are common.
 
 ```python
 MicroPython v1.21.0 on 2023-10-05; Generic ESP32 module with ESP32
@@ -67,7 +74,8 @@ ESP32_GENERIC ([ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/e
 change ```CONFIG_BT_NIMBLE_MAX_CONNECTIONS``` and ```CONFIG_BTDM_CTRL_BLE_MAX_CONN``` in config file (default to 4 and 3, 
 respectively). I have changed these (to 5 and 4) and got successfull concurrent connections to 4 peripherals.
 
-If you have to find peripheral devices, write and use a loop of scan/connect/service-discovery to list the target devices in the beginning.
+If you have to find peripheral devices, write and use a loop of scan/connect/service-discovery to list the target devices 
+in the beginning.
 ```
 Connecting to Device(ADDR_RANDOM, d8:75:ba:xx:yy:zz)             # Heart rate sensor, switched on.
 Connected. <DeviceConnection object at 3ffedf70>
@@ -256,7 +264,8 @@ make -C ports/unix MICROPY_PY_BLUETOOTH=1 MICROPY_BLUETOOTH_NIMBLE=1
 ```
 
 Because the built-in USB-UART kernel module did not work reliably at a very high speed, I had to compile the module 
-using the latest source code (V1.8 on 2024.08) of the manufacturer obtained from [their website](http://www.wch.cn/download/CH341SER_LINUX_ZIP.html) 
+using the latest source code (V1.8 on 2024.08) of the manufacturer obtained from 
+[their website](http://www.wch.cn/download/CH341SER_LINUX_ZIP.html) 
 or from [their github repository](https://github.com/WCHSoftGroup/ch341ser_linux). 
 Before start using it, set an appropriate permission of the USB-UART device you are using (e.g. `chomod 666` or `adduser` 
 to the `dialout` group).
