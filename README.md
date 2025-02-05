@@ -154,9 +154,9 @@ queue by default is 1:  ```self._notify_queue = deque((), 1)```
 
 So *a ```while True:``` loop* with *a ```charateristic.notified()```* 
 shown in the official examples, as well as ```hr_read.py``` shown above, are not 
-necessarily useful; **notified packets should be well separated in time**.
+necessarily useful; **notified packets should be well separated in time from each other**.
 
-Though I do not know exactly what is the future plan of the developers to 
+Though I do not know exactly what is the future plan of the core developers to 
 solve the issue, there is a comment in ```aioble/client.py``` as follows:
 ```
 # Append the data. By default this is a deque with max-length==1, so it
@@ -264,15 +264,15 @@ make -C ports/unix MICROPY_PY_BLUETOOTH=1 MICROPY_BLUETOOTH_NIMBLE=1
 ```
 
 Because the built-in USB-UART kernel module did not work reliably at a very high speed, I had to compile the module 
-using the latest source code (V1.8 on 2024.08) of the manufacturer obtained from 
+using the latest source code (V1.8 on 2024.08) of the manufacturer (WCH) obtained from 
 [their website](http://www.wch.cn/download/CH341SER_LINUX_ZIP.html) 
 or from [their github repository](https://github.com/WCHSoftGroup/ch341ser_linux). 
 Before start using it, set an appropriate permission of the USB-UART device you are using (e.g. `chomod 666` or `adduser` 
 to the `dialout` group).
 
-You have to specify the USB-UART device if it is not `/dev/ttyUSB0` as written in `ports/unix/mpbthciport.c`.
+You have to specify the USB-UART device if it is not `/dev/ttyUSB0` as written in `MPY/ports/unix/mpbthciport.c`.
 
-In my case:
+In my case `MICROPYBTUART=/dev/ttyCH341USB0`:
 ``` Python
 MICROPYBTUART=/dev/ttyCH341USB0 micropython
 MicroPython v1.23.0 on 2024-11-18; linux [GCC 11.5.0] version
@@ -289,5 +289,5 @@ This dongle/unix-port MPY combination was successfully used with my aioble test 
 in this repository.
 
 - Additional notes: 
-You can also use this USB dongle from the other softwares than MPY/aioble such as [BlueZ](https://github.com/bluez/bluez) and 
+You can also use this USB dongle from the other softwares such as [BlueZ](https://github.com/bluez/bluez) and 
 [Google Bumble](https://github.com/google/bumble) because the APIs of HCI H4 are common.
