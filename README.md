@@ -289,5 +289,6 @@ This dongle/unix-port MPY combination was successfully used with my aioble test 
 in this repository.
 
 - Additional notes: 
-You can also use this USB dongle from the other softwares such as [BlueZ](https://github.com/bluez/bluez) and 
+You can also use this USB dongle from the other softwares such as [BlueZ](https://github.com/bluez/bluez),
+[BTstack](https://github.com/bluekitchen/btstack) and 
 [Google Bumble](https://github.com/google/bumble) because the APIs of HCI H4 are common.
