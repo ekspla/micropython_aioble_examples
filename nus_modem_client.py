@@ -70,16 +70,6 @@ class NUSModemClient:
         self.write_buf_page = tuple(self.mv_write_buf[i * 128:(i+1) * 128] for i in range(4))
         self.idx_write_buf = 0
 
-    async def find_mpy_nus(self):
-        # Scan for 5 seconds, in active mode, with very low interval/window (to
-        # maximise detection rate).
-        async with aioble.scan(5000, interval_us=30000, window_us=30000, active=True) as scanner:
-            async for result in scanner:
-                # See if it matches our name and the environmental sensing service.
-                if result.name() == "mpy-nus" and _NUS_SERVICE_UUID in result.services():
-                    return result.device
-        return None
-
     async def notify_handler(self):
         _EOT = bytes(VALUE_EOT)
         _STX = VALUE_STX[0]
