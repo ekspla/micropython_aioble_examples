@@ -25,13 +25,13 @@ _ADV_APPEARANCE_GENERIC_COMPUTER = const(128)
 _ADV_INTERVAL_US = const(250_000)
 
 VALUE_SOH = bytearray([0x01])                             # SOH == 128-byte data
-#VALUE_STX = bytearray([0x02])                             # STX == 1024-byte data
+VALUE_STX = bytearray([0x02])                             # STX == 1024-byte data
 VALUE_C = bytearray([0x43])                               # 'C'
 #VALUE_G = bytearray([0x47])                               # 'G'
 VALUE_ACK = bytearray([0x06])                             # ACK
 VALUE_NAK = bytearray([0x15])                             # NAK
 VALUE_EOT = bytearray([0x04])                             # EOT
-#VALUE_CAN = bytearray([0x18])                             # CAN
+VALUE_CAN = bytearray([0x18])                             # CAN
 
 ##_FILEPATH = '/sd/test.bin'
 _FILEPATH = 'test.bin'
@@ -51,23 +51,26 @@ class NUSModemServer:
             max_len=20, 
         )
         aioble.register_services(nus_service)
+        aioble.config(mtu=206)
+        # **Packet**
+        self.mtu_size = 23
         # **Block**
-        self.block_data_size = 128
-        self.block_buf = bytearray(3 + self.block_data_size + 2) # Header(SOH, num, ~num); data; CRC16
+        self.use_stx = False # True/False = STX/SOH
+        self.block_buf = bytearray(3 + 1024 + 2)                                 # Header(SOH/STX, num, ~num); data(128 or 1024 bytes); CRC16
         self.block_num = 0 # Block number(0-255).
         #self.idx_block_buf = 0 # Index in block_buf.
         self.mv_block_buf = memoryview(self.block_buf)
-        self.block_data = self.mv_block_buf[3:-2]
-        self.block_crc = self.mv_block_buf[-2:]
-        #self.block_error = False
+        self.block_size = None
+        self.block_data = None
+        self.block_crc = None
+        self.block_size_data_crc = (
+            (3 + 128 + 2, self.mv_block_buf[3:131], self.mv_block_buf[131:133], ), # SOH
+            (3 + 1024 + 2, self.mv_block_buf[3:-2], self.mv_block_buf[-2:], ),     # STX
+        )
         # **File** A file is made of blocks; a block is made of packets.
         self.data_size = 0
         self.data_read = 0
         self.filename = ''
-        #self.read_buf = bytearray(self.block_data_size * 4)
-        #self.mv_read_buf = memoryview(self.read_buf)
-        #self.read_buf_page = tuple(self.mv_read_buf[i*self.block_data_size:(i+1)*self.block_data_size] for i in range(4))
-        #self.idx_read_buf = 0
 
     def construct_block_zero(self):
         self.block_num = -1
@@ -79,19 +82,24 @@ class NUSModemServer:
         self.construct_block(len(header))
 
     def construct_block(self, nbytes):
-        while nbytes < self.block_data_size:
+        while nbytes < self.block_size - 5:
             self.block_data[nbytes] = 0x00 # Zero padding to the end.
             nbytes += 1
 
         self.block_num = (self.block_num + 1) % 256
+        self.block_buf[0] = VALUE_STX[0] if self.use_stx else VALUE_SOH[0]
         self.block_buf[1] = self.block_num
         self.block_buf[2] = 0xFF ^ self.block_num
         self.block_crc[:] = self.crc16_arc(self.block_data).to_bytes(2, 'big')
 
     async def send_block(self, char, delay_ms): # Send a block through packets.
-        for i in range(6):
-            char.notify(self.connection, self.mv_block_buf[i*20:(i+1)*20])
-        char.notify(self.connection, self.mv_block_buf[120:])
+        mtu = self.mtu_size - 3
+        idx = 0
+        n = self.block_size - mtu
+        while idx < n:
+            char.notify(self.connection, self.mv_block_buf[idx:(idx := idx + mtu)])
+            await asyncio.sleep_ms(0)
+        char.notify(self.connection, self.mv_block_buf[idx:self.block_size])
         await asyncio.sleep_ms(delay_ms)
 
     async def wait_until_data(self, char, t_ms=10_000):
@@ -121,9 +129,13 @@ class NUSModemServer:
                 else:
                     print("'C' was received.")
 
-                self.block_buf[0] = VALUE_SOH[0] # Always use 128 byte/block.
+                # Check MTU
+                self.mtu_size = self.connection.mtu or self.mtu_size
+                print(f"MTU: {self.mtu_size}")
 
                 # Send block number zero.  Receive ACK.
+                self.use_stx = True if self.mtu_size > 23 else False
+                self.block_size, self.block_data, self.block_crc = self.block_size_data_crc[int(self.use_stx)]
                 self.construct_block_zero()
                 retries = 3
                 while retries > 0:
@@ -143,6 +155,7 @@ class NUSModemServer:
                     print("The second 'C' was received.")
 
                 # Send blocks of number >= 1
+                self.data_read = 0
                 with open(_FILEPATH, 'rb') as f:
                     while self.connection.is_connected():
                         if (nbytes := f.readinto(self.block_data)):
@@ -167,6 +180,7 @@ class NUSModemServer:
                             print(f'File size: {self.data_size}.  Transmitted size: {self.data_read}.')
                             await self.connection.disconnect()
                 print("Disconnected.")
+                self.mtu_size = 23
 
     @micropython.viper
     def crc16_arc(self, byte_array) -> int:

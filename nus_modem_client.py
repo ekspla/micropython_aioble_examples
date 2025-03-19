@@ -26,7 +26,7 @@ _NUS_RX_CHARACTERISTIC_UUID = bluetooth.UUID("6e400002-b5a3-f393-e0a9-e50e24dcca
 _NUS_TX_CHARACTERISTIC_UUID = bluetooth.UUID("6e400003-b5a3-f393-e0a9-e50e24dcca9e")
 
 VALUE_SOH = bytearray([0x01])                             # SOH == 128-byte data
-#VALUE_STX = bytearray([0x02])                             # STX == 1024-byte data
+VALUE_STX = bytearray([0x02])                             # STX == 1024-byte data
 VALUE_C = bytearray([0x43])                               # 'C'
 #VALUE_G = bytearray([0x47])                               # 'G'
 VALUE_ACK = bytearray([0x06])                             # ACK
@@ -43,25 +43,31 @@ class NUSModemClient:
         self.tx_characteristic = None
         self.rx_characteristic = None
         # **Packet**
+        self.mtu_size = 23
         self.notification_data = bytearray()
         # **Block**
         self.is_block = False
-        self.block_data_size = 128
-        self.block_buf = bytearray(3 + self.block_data_size + 2)               # Header(SOH, num, ~num); data; CRC16
+        self.use_stx = False # True/False = STX/SOH
+        self.block_buf = bytearray(3 + 1024 + 2)                                 # Header(SOH/STX, num, ~num); data(128 or 1024 bytes); CRC16
         self.block_num = 0 # Block number(0-255).
         self.idx_block_buf = 0 # Index in block_buf.
         self.mv_block_buf = memoryview(self.block_buf)
-        self.block_data = self.mv_block_buf[3:-2]
-        self.block_crc = self.mv_block_buf[-2:]
+        self.block_size = None
+        self.block_data = None
+        self.block_crc = None
+        self.block_size_data_crc = (
+            (3 + 128 + 2, self.mv_block_buf[3:131], self.mv_block_buf[131:133], ), # SOH
+            (3 + 1024 + 2, self.mv_block_buf[3:-2], self.mv_block_buf[-2:], ),     # STX
+        )
         self.block_error = False
         # **File**                                                               A file is made of blocks; a block is made of packets.
         self.data_size = 0
         self.data_written = 0
         self.filename = ''
         self.is_write_mode = False
-        self.write_buf = bytearray(self.block_data_size * 4)
+        self.write_buf = bytearray(128 * 4)                                      # This write buffer is exclusively used in SOH blocks.
         self.mv_write_buf = memoryview(self.write_buf)
-        self.write_buf_page = tuple(self.mv_write_buf[i*self.block_data_size:(i+1)*self.block_data_size] for i in range(4))
+        self.write_buf_page = tuple(self.mv_write_buf[i * 128:(i+1) * 128] for i in range(4))
         self.idx_write_buf = 0
 
     async def find_mpy_nus(self):
@@ -76,6 +82,7 @@ class NUSModemClient:
 
     async def notify_handler(self):
         _EOT = bytes(VALUE_EOT)
+        _STX = VALUE_STX[0]
         queue = self.tx_characteristic._notify_queue
 
         def append_to_block_buf(data):
@@ -83,9 +90,16 @@ class NUSModemClient:
                 self.block_buf[self.idx_block_buf:self.idx_block_buf + len_data] = data
                 self.idx_block_buf += len_data
 
-        async def fill_queue(n, timeout_ms):
+        async def fill_queue(timeout_ms):
             async def q():
-                while len(queue) < n:
+                while len(queue) == 0:
+                    #await asyncio.sleep_ms(10)
+                    await asyncio.sleep_ms(2)
+                self.use_stx = True if data[0] == _STX else False
+                self.block_size, self.block_data, self.block_crc = self.block_size_data_crc[int(self.use_stx)]
+                await asyncio.sleep_ms(0)
+                n = self.block_size - len(data)
+                while sum((len(x) for x in queue)) < n:
                     #await asyncio.sleep_ms(10)
                     await asyncio.sleep_ms(2)
             try:
@@ -99,7 +113,7 @@ class NUSModemClient:
                 self.is_block = False
                 self.notification_data[:] = data
             elif self.is_block:                                                     # Packets should be combined to make a block.
-                await fill_queue(n=6, timeout_ms=150)
+                await fill_queue(timeout_ms=150)
                 append_to_block_buf(data)
                 while len(queue) >= 1:
                     append_to_block_buf(queue.popleft())
@@ -144,22 +158,31 @@ class NUSModemClient:
 
     async def read_block(self):
         async def check_block_buf():
-            while self.is_block and self.idx_block_buf < 133: # c.f. 1+1+1+128+2=133 bytes (one block)
+            while self.is_block and self.idx_block_buf == 0:
+                #await asyncio.sleep_ms(10)
+                await asyncio.sleep_ms(2)
+            await asyncio.sleep_ms(0)
+            block_size = self.block_size
+            while self.is_block and self.idx_block_buf < block_size: # block_size = 133/1029 bytes in SOH/STX (one block)
                 #await asyncio.sleep_ms(10)
                 await asyncio.sleep_ms(2)
 
         def write_to_buf(data):
-            self.write_buf_page[self.idx_write_buf][:] = data
-            self.idx_write_buf += 1
-            if self.idx_write_buf == 4:
-                self.save_chunk_raw(self.write_buf)
-                self.idx_write_buf = 0
-            elif (self.data_written + self.block_data_size) == self.data_size:
-                flush_write_buf()
-            return self.block_data_size
+            if self.use_stx: # Do not use write_buf in STX.
+                if self.idx_write_buf > 0: flush_write_buf()
+                self.save_chunk_raw(data)
+            else:
+                self.write_buf_page[self.idx_write_buf][:] = data
+                self.idx_write_buf += 1
+                if self.idx_write_buf == 4:
+                    self.save_chunk_raw(self.write_buf)
+                    self.idx_write_buf = 0
+                elif (self.data_written + self.block_size) == self.data_size:
+                    flush_write_buf()
+            return self.block_size - 5
 
         def flush_write_buf():
-            self.save_chunk_raw(self.mv_write_buf[:self.idx_write_buf * self.block_data_size])
+            self.save_chunk_raw(self.mv_write_buf[:self.idx_write_buf * 128])
             self.idx_write_buf = 0
 
         try:
@@ -168,10 +191,10 @@ class NUSModemClient:
             if int.from_bytes(self.block_crc, 'big') != self.crc16_arc(self.block_data):
                 self.block_error = True
                 print(f'Size: {self.idx_block_buf}')
-                print(self.block_buf)
+                print(self.block_buf[:self.block_size])
             else:
                 if self.is_write_mode:                                                    # Blocks should be combined to make a file.
-                    if (self.data_written + self.block_data_size) <= self.data_size:
+                    if (self.data_written + self.block_size) <= self.data_size:
                         self.data_written += write_to_buf(self.block_data)
                     else:
                         if self.idx_write_buf > 0: flush_write_buf()
@@ -271,7 +294,8 @@ class NUSModemClient:
             print("Connecting to", device)
             connection = await device.connect(
                 timeout_ms=60_000, 
-                scan_duration_ms=5_000, min_conn_interval_us=7_500, max_conn_interval_us=7_500)
+                #scan_duration_ms=5_000, min_conn_interval_us=7_500, max_conn_interval_us=7_500)
+                scan_duration_ms=5_000, min_conn_interval_us=50_000, max_conn_interval_us=50_000)
         except asyncio.TimeoutError:
             print("Timeout during connection")
             return
@@ -283,11 +307,16 @@ class NUSModemClient:
                 self.rx_characteristic = await nus_service.characteristic(_NUS_RX_CHARACTERISTIC_UUID)
                 # Server (Peripheral) -> Client (Central)
                 self.tx_characteristic = await nus_service.characteristic(_NUS_TX_CHARACTERISTIC_UUID)
-                self.tx_characteristic._notify_queue = deque((), 7)
+                self.tx_characteristic._notify_queue = deque((), 7)                     # TODO: check if 7 is sufficient for STX.
                 await self.tx_characteristic.subscribe(notify=True)
             except asyncio.TimeoutError:
                 print("Timeout discovering services/characteristics")
                 return
+
+            # Increase MTU
+            await connection.exchange_mtu(mtu=206)
+            self.mtu_size = connection.mtu or self.mtu_size
+            print(f"MTU: {self.mtu_size}")
 
             await self.fetch_file()
 
