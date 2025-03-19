@@ -226,7 +226,7 @@ class NUSModemClient:
         self.filename = file_informations[0]
         self.data_size = int(file_informations[1])
         if self.filename in os.listdir('/sd'):
-            os.rename(f'/sd/{self.filename}', '/sd/{self.filename}.old')
+            os.rename(f'/sd/{self.filename}', f'/sd/{self.filename}.old')
 
         print(time.localtime())
         await self.send_cmd(self.rx_characteristic, VALUE_ACK, 100)                       # Send ACK.
