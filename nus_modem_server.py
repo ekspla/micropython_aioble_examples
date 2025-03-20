@@ -82,7 +82,8 @@ class NUSModemServer:
         self.construct_block(len(header))
 
     def construct_block(self, nbytes):
-        while nbytes < self.block_size - 5:
+        block_data_size = self.block_size - 5
+        while nbytes < block_data_size:
             self.block_data[nbytes] = 0x00 # Zero padding to the end.
             nbytes += 1
 
