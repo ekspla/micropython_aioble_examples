@@ -206,6 +206,12 @@ The limitations are due mainly to the implementation of YMODEM in part as follow
 Larger MTU by DLE (Data Length Extension) and 1024-byte data in YMODEM (STX), that make throughput higher, are not 
 supported (not implemented yet).
 
+Update MAR 2025: 
+[A full-featured version of the pair was also prepared](https://github.com/ekspla/micropython_aioble_examples/blob/main/nus_modem_full_ver/) 
+to test the throughput.  Using conn_intervals = 7.5 ms, STX (1024-byte block) and fragmentation of MTU = 209 via L2CAP 
+89.8 kbps was obtained.  Further increase in throughput would require `LE Data Length Extension` and `LE 2M PHY`.
+
+
 ## ESP32 chip as a USB bluetooth dongle (HCI H4) for use with unix-port (Linux) of micropython and aioble
 
 A cheap USB bluetooth dongle was easily built by using an ESP32, a USB-UART chip ([CH340E](https://www.wch.cn/search?t=all&q=CH340E)) 
