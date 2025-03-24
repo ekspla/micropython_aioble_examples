@@ -82,7 +82,7 @@ class NUSModemClient:
 
         async def fill_queue(timeout_ms):
             async def q():
-                n = self.block_size - len_data
+                n = to_be_filled
                 while sum((len(x) for x in queue)) < n:
                     #await asyncio.sleep_ms(10)
                     await asyncio.sleep_ms(2)
@@ -99,7 +99,7 @@ class NUSModemClient:
             elif self.is_block:                                                     # Packets should be combined to make a block.
                 self.use_stx = True if data[0] == _STX else False
                 self.block_size, self.block_data, self.block_crc = self.block_size_data_crc[int(self.use_stx)]
-                if (len_data := len(data)) < self.block_size:
+                if (to_be_filled := (self.block_size - len(data))) > 0:
                     await fill_queue(timeout_ms=150)
                 append_to_block_buf(data)
                 while len(queue) >= 1:
