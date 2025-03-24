@@ -51,7 +51,7 @@ class NUSModemServer:
             max_len=20, 
         )
         aioble.register_services(nus_service)
-        aioble.config(mtu=206)
+        aioble.config(mtu=512)
         # **Packet**
         self.mtu_size = 23
         # **Block**
@@ -135,7 +135,7 @@ class NUSModemServer:
                 print(f"MTU: {self.mtu_size}")
 
                 # Send block number zero.  Receive ACK.
-                self.use_stx = True if self.mtu_size > 23 else False
+                self.use_stx = False # Always use SOH for block zero.
                 self.block_size, self.block_data, self.block_crc = self.block_size_data_crc[int(self.use_stx)]
                 self.construct_block_zero()
                 retries = 3
@@ -156,6 +156,8 @@ class NUSModemServer:
                     print("The second 'C' was received.")
 
                 # Send blocks of number >= 1
+                self.use_stx = True if self.mtu_size > 23 else False
+                self.block_size, self.block_data, self.block_crc = self.block_size_data_crc[int(self.use_stx)]
                 self.data_read = 0
                 with open(_FILEPATH, 'rb') as f:
                     while self.connection.is_connected():

@@ -75,20 +75,14 @@ class NUSModemClient:
         _STX = VALUE_STX[0]
         queue = self.tx_characteristic._notify_queue
 
-        def append_to_block_buf(data):
-            if (len_data := len(data)):
-                self.block_buf[self.idx_block_buf:self.idx_block_buf + len_data] = data
-                self.idx_block_buf += len_data
+        def append_to_block_buf(d):
+            if (len_d := len(d)):
+                self.block_buf[self.idx_block_buf:self.idx_block_buf + len_d] = d
+                self.idx_block_buf += len_d
 
         async def fill_queue(timeout_ms):
             async def q():
-                while len(queue) == 0:
-                    #await asyncio.sleep_ms(10)
-                    await asyncio.sleep_ms(2)
-                self.use_stx = True if data[0] == _STX else False
-                self.block_size, self.block_data, self.block_crc = self.block_size_data_crc[int(self.use_stx)]
-                await asyncio.sleep_ms(0)
-                n = self.block_size - len(data)
+                n = self.block_size - len_data
                 while sum((len(x) for x in queue)) < n:
                     #await asyncio.sleep_ms(10)
                     await asyncio.sleep_ms(2)
@@ -103,7 +97,10 @@ class NUSModemClient:
                 self.is_block = False
                 self.notification_data[:] = data
             elif self.is_block:                                                     # Packets should be combined to make a block.
-                await fill_queue(timeout_ms=150)
+                self.use_stx = True if data[0] == _STX else False
+                self.block_size, self.block_data, self.block_crc = self.block_size_data_crc[int(self.use_stx)]
+                if (len_data := len(data)) < self.block_size:
+                    await fill_queue(timeout_ms=150)
                 append_to_block_buf(data)
                 while len(queue) >= 1:
                     append_to_block_buf(queue.popleft())
@@ -284,8 +281,7 @@ class NUSModemClient:
             print("Connecting to", device)
             connection = await device.connect(
                 timeout_ms=60_000, 
-                #scan_duration_ms=5_000, min_conn_interval_us=7_500, max_conn_interval_us=7_500)
-                scan_duration_ms=5_000, min_conn_interval_us=50_000, max_conn_interval_us=50_000)
+                scan_duration_ms=5_000, min_conn_interval_us=7_500, max_conn_interval_us=7_500)
         except asyncio.TimeoutError:
             print("Timeout during connection")
             return
@@ -304,7 +300,7 @@ class NUSModemClient:
                 return
 
             # Increase MTU
-            await connection.exchange_mtu(mtu=206)
+            await connection.exchange_mtu(mtu=209)
             self.mtu_size = connection.mtu or self.mtu_size
             print(f"MTU: {self.mtu_size}")
 
