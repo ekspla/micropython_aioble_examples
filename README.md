@@ -208,8 +208,8 @@ supported (not implemented yet).
 
 Update MAR 2025: 
 [A full-featured version of the pair was also prepared](https://github.com/ekspla/micropython_aioble_examples/blob/main/nus_modem_full_ver/) 
-to test the throughput.  Using conn_intervals = 7.5 ms, STX (1024-byte block) and fragmentation of MTU = 209 via L2CAP 
-89.8 kbps was obtained.  Further increase in throughput would require `LE Data Length Extension` and `LE 2M PHY`.
+to test the higher throughput.  Using conn_intervals = 7.5 ms, STX (1024-byte block) and fragmentation of MTU = 209 via L2CAP 
+94.3 kbps was obtained.  Further increase in throughput would require `LE Data Length Extension` and `LE 2M PHY`.
 
 
 ## ESP32 chip as a USB bluetooth dongle (HCI H4) for use with unix-port (Linux) of micropython and aioble
