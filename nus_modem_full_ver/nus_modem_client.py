@@ -165,7 +165,7 @@ class NUSModemClient:
                 if self.idx_write_buf == 4:
                     self.save_chunk_raw(self.write_buf)
                     self.idx_write_buf = 0
-                elif (self.data_written + self.block_size) == self.data_size:
+                elif (self.data_written + self.block_size - 5) == self.data_size:
                     flush_write_buf()
             return self.block_size - 5
 
@@ -182,7 +182,7 @@ class NUSModemClient:
                 print(self.block_buf[:self.block_size])
             else:
                 if self.is_write_mode:                                                    # Blocks should be combined to make a file.
-                    if (self.data_written + self.block_size) <= self.data_size:
+                    if (self.data_written + self.block_size - 5) <= self.data_size:
                         self.data_written += write_to_buf(self.block_data)
                     else:
                         if self.idx_write_buf > 0: flush_write_buf()
