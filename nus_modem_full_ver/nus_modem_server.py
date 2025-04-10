@@ -1,4 +1,4 @@
-# (c) 2024 ekspla.
+# (c) 2024-2025 ekspla.
 # MIT License.  https://github.com/ekspla/micropython_aioble_examples
 #
 # An example pair of codes using YMODEM/Nordic UART Service.
