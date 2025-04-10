@@ -154,7 +154,7 @@ class NUSModemClient:
             self.idx_write_buf = 0
 
         try:
-            await asyncio.wait_for(check_block_buf(), timeout=10)
+            await asyncio.wait_for(check_block_buf(), timeout=5) # Set client/server timeouts at 5/10 sec.
             if not self.is_block: return # The 1st EOT may arrive very late.
             if int.from_bytes(self.block_crc, 'big') != self.crc16_arc(self.block_data):
                 self.block_error = True
@@ -179,7 +179,7 @@ class NUSModemClient:
                 self.block_error = False
         except asyncio.TimeoutError:
             self.block_error = True
-            print('Timeout 10 sec.')
+            print('Timeout 5 sec.')
         # Prepare for the next data block.
         self.idx_block_buf = 0
 
