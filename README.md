@@ -9,7 +9,7 @@ The following examples were tested with [MicroPython](https://micropython.org/) 
 
 
 ## Read measured values from a [HIOKI](https://www.hioki.com/) voltmeter via BLE
-```hioki_z3210.py```
+`hioki_z3210.py`
 
 An example to read measured values from HIOKI's voltmeter, DT4261, via 
 [Z3210 BLE interface](https://www.hioki.com/global/products/specialized-solutions/connecting-instruments/id_6780).
@@ -41,11 +41,11 @@ Connected.
 ```
 
 ## Read heart rate values from a heart rate sensor via BLE
-```hr_read.py```
+`hr_read.py`
 
 An example to read heart rate values (BPM) from 
 [Magene's H64](https://support.magene.com/hc/en-us/categories/900000170623-H64-Heart-Rate-Sensor).  
-Change the device name ```_HR_SENSOR_NAME``` or the ```address``` to specify your device.  The code should work for most 
+Change the device name `_HR_SENSOR_NAME` or the `address` to specify your device.  The code should work for most 
 of the BLE heart-rate sensors because the service and the characteristics are common.
 
 ```python
@@ -65,17 +65,18 @@ Connecting to Device(ADDR_RANDOM, d8:75:ba:xx:yy:zz)
 ```
 
 ## Handling of connections to multiple peripherals and disconnect/reconnect
-```conn_multiple.py```
+`conn_multiple.py`
 
 Based on the codes of voltmeter and heart rate monitor, an example is shown.
 
 You may want to change the maximum allowed number of connections in bluetooth stack.  
 ESP32_GENERIC ([ESP-IDF](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/kconfig.html)) for example, 
-change ```CONFIG_BT_NIMBLE_MAX_CONNECTIONS``` and ```CONFIG_BTDM_CTRL_BLE_MAX_CONN``` in config file (default to 4 and 3, 
+change `CONFIG_BT_NIMBLE_MAX_CONNECTIONS` and `CONFIG_BTDM_CTRL_BLE_MAX_CONN` in config file (default to 4 and 3, 
 respectively). I have changed these (to 5 and 4) and got successfull concurrent connections to 4 peripherals.
 
 If you have to find peripheral devices, write and use a loop of scan/connect/service-discovery to list the target devices 
 in the beginning.
+
 ```
 Connecting to Device(ADDR_RANDOM, d8:75:ba:xx:yy:zz)             # Heart rate sensor, switched on.
 Connected. <DeviceConnection object at 3ffedf70>
@@ -147,17 +148,18 @@ End.
 (A link to discussion of this topic can be found 
 [here](https://github.com/orgs/micropython/discussions/15544).)
 
-In the current version of ```aioble/client.py```, a data of a notified 
+In the current version of `aioble/client.py`, a data of a notified 
 packet can be overwritten by those of the successive notified packets in 
 the queue to which the data are appended.  This is because the size of the 
-queue by default is 1:  ```self._notify_queue = deque((), 1)```
+queue by default is 1:  `self._notify_queue = deque((), 1)`
 
-So *a ```while True:``` loop* with *a ```charateristic.notified()```* 
-shown in the official examples, as well as ```hr_read.py``` shown above, are not 
+So *a `while True:` loop* with *a `charateristic.notified()`* 
+shown in the official examples, as well as `hr_read.py` shown above, are not 
 necessarily useful; **notified packets should be well separated in time from each other**.
 
 Though I do not know exactly what is the future plan of the core developers to 
-solve the issue, there is a comment in ```aioble/client.py``` as follows:
+solve the issue, there is a comment in `aioble/client.py` as follows:
+
 ```
 # Append the data. By default this is a deque with max-length==1, so it
 # replaces. But if capture is enabled then it will append.
@@ -165,7 +167,8 @@ solve the issue, there is a comment in ```aioble/client.py``` as follows:
 
 As a workaround for Nordic UART client used in [mpy_xoss_sync.py](https://github.com/ekspla/xoss_sync), 
 I changed the size of the queue and retrieved the accumulated notified data from the queue as followings.
-``` python
+
+```python
 buffer = bytearray()
 async with connection:
     service = await connection.service(_SERVICE_UUID) # A Nordic UART Service.
@@ -191,7 +194,7 @@ chunk of data from the client (micropython/aioble) before going to the next, and
 by the client to process (e.g. concatinate) the data in the queue.
 
 
-A pair of test codes, ```nus_modem_client.py``` and ```nus_modem_server.py```, were prepared as the complete 
+A pair of test codes, `nus_modem_client.py` and `nus_modem_server.py`, were prepared as the complete 
 set of working example.  In this case, a primitive YMODEM file transfer protocol was implemented on 
 [Nordic UART service's](https://docs.nordicsemi.com/bundle/ncs-latest/page/nrf/libraries/bluetooth_services/services/nus.html) 
 TX/RX channels.  Athough there are limitations as described below, it works well as expected and has been 
@@ -234,6 +237,7 @@ GPIO pins 5, 18, 23, 19 are used as TxD, RxD, CTS, RTS, respectively.
 I had to modify the codes as followings to set the parameters as above.
 
 Modify `ESP-IDF/components/bt/controller/esp32/Kconfig.in`:
+
 ``` Diff
     config BTDM_CTRL_HCI_UART_BAUDRATE
         int "UART Baudrate for HCI"
@@ -245,6 +249,7 @@ Modify `ESP-IDF/components/bt/controller/esp32/Kconfig.in`:
         help
 ```
 Modify `sdkconfig.defaults`:
+
 ```
 CONFIG_BT_BLUEDROID_ENABLED=n
 CONFIG_BT_CONTROLLER_ONLY=y
@@ -265,6 +270,7 @@ Because I could not obtain reliable connections at 1.5, 2 and 3 M bps, the baudr
 
 [The MPY on Linux machine using NimBLE stack was built](https://github.com/orgs/micropython/discussions/10234) as 
 follows: 
+
 ``` Shell
 make -C ports/unix MICROPY_PY_BLUETOOTH=1 MICROPY_BLUETOOTH_NIMBLE=1
 ```
@@ -279,6 +285,7 @@ to the `dialout` group).
 You have to specify the USB-UART device if it is not `/dev/ttyUSB0` as written in `MPY/ports/unix/mpbthciport.c`.
 
 In my case `MICROPYBTUART=/dev/ttyCH341USB0`:
+
 ``` Python
 MICROPYBTUART=/dev/ttyCH341USB0 micropython
 MicroPython v1.23.0 on 2024-11-18; linux [GCC 11.5.0] version
