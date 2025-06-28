@@ -301,11 +301,11 @@ This dongle/unix-port MPY combination was successfully used with my aioble test 
 [nus_modem_client.py](https://github.com/ekspla/micropython_aioble_examples/blob/main/nus_modem_client.py), 
 in this repository.
 
-- Additional notes: 
+- Additional notes:  
 You can also use this USB dongle from the other softwares such as [BlueZ](https://github.com/bluez/bluez), 
 [BTstack](https://github.com/bluekitchen/btstack) and 
 [Google Bumble](https://github.com/google/bumble) because the APIs of HCI H4 are common.  
 
-It may be wise for Windows users to stick to the old WCH's driver version (V3.5 on 2019), while the latest one works great on Linux as shown above. 
+It may be wise for Windows users to stick on to the old WCH's driver version (V3.5 on 2019), while the latest one works great on Linux as shown above. 
 [As reported in this forum](https://answers.microsoft.com/en-us/windows/forum/all/usb-serial-ch340-chipset-not-working-after-windows/88b0ab19-9e1b-46bb-82d4-f806e34b2ed9),
 a few percent of my devices stops working with updated V3.9 driver on Windows.  I am not quite sure if the non-working chips are of counterfeit though.
