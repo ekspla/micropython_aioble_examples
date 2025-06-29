@@ -279,7 +279,7 @@ Because the built-in USB-UART kernel module did not work reliably at a very high
 using the latest source code (V1.8 on 2024.08) of the manufacturer (WCH) obtained from 
 [their website](http://www.wch.cn/download/CH341SER_LINUX_ZIP.html) 
 or from [their github repository](https://github.com/WCHSoftGroup/ch341ser_linux). 
-Before start using it, set an appropriate permission of the USB-UART device you are using (e.g. `chomod 666` or `adduser` 
+Before start using it, set an appropriate permission of the USB-UART device you are using (e.g. `chmod 666` or `adduser` 
 to the `dialout` group).
 
 You have to specify the USB-UART device if it is not `/dev/ttyUSB0` as written in `MPY/ports/unix/mpbthciport.c`.
