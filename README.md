@@ -326,16 +326,17 @@ buffer size of the device from properties in the device manager, which is not av
 of the devices; FTDI drivers, for example, do have these settings. Changing the buffer size by 
 SetupComm() almost always does not work for the USB serial devices.  
 
-So an easy and versatile workaround for me is to force the device to flush the buffer when desired. 
-An application note (AN232B-04, FTDI) describes that an unused modem status line (DSR in this case) 
-can be used for this purpose; the buffer is flushed when the state of DTR tied to DSR is changed. 
-This seems to work almost all of the USB serial devices that I have. In prior to ReadFile(), check 
-if there is a character to be read in the queue with ClearCommError() and COMSTAT.cbInQueue. If not, 
-change the state of DTR, wait some time (say, 1 ms) and check the queue once again.  
+So an easy and versatile workaround for me was to force the device to flush the buffer when desired. 
+An application note [\(AN232B-04, FTDI\)](https://www.ftdichip.com/Documents/AppNotes/AN232B-04_DataLatencyFlow.pdf) 
+describes that an unused modem status line (DSR in this case) can be used for this purpose; the 
+buffer is flushed when the state of DTR tied to DSR is changed. This seems to work almost all 
+of the USB serial devices that I have. In prior to ReadFile(), check if there is a character to 
+be read in the queue with ClearCommError() and COMSTAT.cbInQueue. If not, change the state of DTR, 
+wait some time (say, 1 ms) and check the queue once again.  
 
 However, changing the state of DTR (and also RTS) by an API of EscapeCommFunction() does not 
 necessarily work.  Note that the `usbser.sys` of Microsoft which is used by most of the USB CDC 
-devices today does not work, while some proprietary drivers such as FTDI do work.  
+devices today does not work, while some proprietary drivers such as FTDI's ones do work.  
 
 So a workaround to this is using a sequence of GetCommState(), SetCommState() and EscapeCommFunction() 
 to change the DTR state which is shown in [newlib-cygwin](https://sourceware.org/pipermail/cygwin-cvs/2022q4/015643.html) 
