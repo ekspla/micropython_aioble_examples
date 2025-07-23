@@ -309,3 +309,40 @@ Additional notes:
  - It may be wise for Windows users to stick on to the old WCH's driver version (V3.5 on 2019), while the latest one works great on Linux as shown above. 
 [As reported in this forum](https://answers.microsoft.com/en-us/windows/forum/all/usb-serial-ch340-chipset-not-working-after-windows/88b0ab19-9e1b-46bb-82d4-f806e34b2ed9),
 a few percent of my devices stops working with updated V3.9 driver on Windows.  I am not quite sure if the non-working chips are of counterfeit though.
+
+ - A note for Windows users:  
+
+There is [a long standing PR from a core developer](https://github.com/micropython/micropython/pull/7781) 
+to implement NimBLE on Windows port of MicroPython.  
+
+One of the most big issue to use this PR in my case was latencies in USB serial devices. 
+The default latency of 16 ms/packet and a large USB buffer size made serial communications (HCI H4) 
+unreliable. In a worst case scenario with a 4096-byte USB buffer (64 packet * 64 bytes/packet), 
+this latency resuts in 64 packet * 16 ms = 1024 ms delay, which is not torrelable.  
+
+The best workaround would be to use a legacy COM port (such as 16550A), which is not available 
+in most of the PCs these days. Another workaround is to decrease the USB latency timer and/or the 
+buffer size of the device from properties in the device manager, which is not available for all 
+of the devices; FTDI drivers, for example, do have these settings. Changing the buffer size by 
+SetupComm() almost always does not work for the USB serial devices.  
+
+So an easy and versatile workaround for me is to force the device to flush the buffer when desired. 
+An application note (AN232B-04, FTDI) describes that an unused modem status line (DSR in this case) 
+can be used for this purpose; the buffer is flushed when the state of DTR tied to DSR is changed. 
+This seems to work almost all of the USB serial devices that I have. In prior to ReadFile(), check 
+if there is a character to be read in the queue with ClearCommError() and COMSTAT.cbInQueue. If not, 
+change the state of DTR, wait some time (say, 1 ms) and check the queue once again.  
+
+However, changing the state of DTR (and also RTS) by an API of EscapeCommFunction() does not 
+necessarily work.  Note that the `usbser.sys` of Microsoft which is used by most of the USB CDC 
+devices today does not work, while some proprietary drivers such as FTDI do work.  
+
+So a workaround to this is using a sequence of GetCommState(), SetCommState() and EscapeCommFunction() 
+to change the DTR state which is shown in [newlib-cygwin](https://sourceware.org/pipermail/cygwin-cvs/2022q4/015643.html) 
+and also in 
+[a Microsoft's code](https://github.com/microsoft/referencesource/blob/main/System/sys/system/IO/ports/SerialStream.cs).  
+
+There is also a good instruction for how to set COMMTIMEOUTS with USB serial devices as a comment in 
+the Microsoft's code shown above; ReadIntervalTimeout, ReadTotalTimeoutMultiplier and 
+WriteTotalTimeoutMultiplier do not make sense in USB serial devices where characters are transferred 
+in packets.  
