@@ -326,8 +326,8 @@ buffer size of the device from properties in the device manager, which is not av
 of the devices; FTDI drivers, for example, do have these settings. Changing the buffer size by 
 SetupComm() almost always does not work for the USB serial devices.  
 
-So an easy and versatile workaround for me was to force the device to flush the buffer when desired. 
-FlushFileBuffers() did not work. 
+So an easy and versatile workaround for me was to force the device to flush the buffer when desired, 
+but FlushFileBuffers() did not work. 
 An application note [\(AN232B-04, FTDI\)](https://www.ftdichip.com/Documents/AppNotes/AN232B-04_DataLatencyFlow.pdf) 
 describes that an unused modem status line (DSR in this case) can be used for this purpose; the 
 buffer is flushed when the state of DTR tied to DSR is changed. This seems to work almost all 
