@@ -351,7 +351,7 @@ the Microsoft's code shown above; ReadIntervalTimeout, ReadTotalTimeoutMultiplie
 WriteTotalTimeoutMultiplier do not make sense in USB serial devices where characters are transferred 
 in a packet.  
 
-    - Round-trip times on Windows 10.  
+ - Round-trip times on Windows 10.  
 
 TXD-RXD 1-byte loop-back test as the scheme shown above at 1 Mbps, except for 
 the real COM1 port at 115.2 kbps. All of the USB devices were connected via an 
