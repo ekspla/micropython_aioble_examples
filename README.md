@@ -350,3 +350,31 @@ There is also a good instruction for how to set COMMTIMEOUTS with USB serial dev
 the Microsoft's code shown above; ReadIntervalTimeout, ReadTotalTimeoutMultiplier and 
 WriteTotalTimeoutMultiplier do not make sense in USB serial devices where characters are transferred 
 in a packet.  
+
+    - Round-trip times on Windows 10.  
+
+TXD-RXD 1-byte loop-back test as the scheme shown above at 1 Mbps, except for 
+the real COM1 port at 115.2 kbps. All of the USB devices were connected via an 
+external USB hub. These values in milliseconds might be affected by the 1-ms 
+waiting time in checking the queue more than once.  
+
+| Chip    | Driver     | USB latency timer | DTR-DSR      | Min   | Max   | Avg   |
+| ------- | ---------- | ----------------- | ------------ | ----- | ----- | ----- |
+| FT232RL | 2.12.28.0  | 16                | connected    | 2.66  | 5.22  | 2.87  |
+| FT232RL | 2.12.28.0  | 16                | disconnected | 3.37  | 21.31 | 12.40 |
+| FT232RL | 2.12.28.0  | 1                 | connected    | 2.68  | 5.33  | 2.83  |
+| FT232RL | 2.12.28.0  | 1                 | disconnected | 2.65  | 5.80  | 2.80  |
+| CP2102  | 11.3.0.176 | 1                 | connected    | 7.96  | 13.01 | 10.00 |
+| CP2102  | 11.3.0.176 | 1                 | disconnected | 7.99  | 13.81 | 10.21 |
+| CP2102  | 11.4.0.393 | 1                 | connected    | 7.96  | 13.73 | 10.21 |
+| CP2102  | 11.4.0.393 | 1                 | disconnected | 7.96  | 20.89 | 9.49  |
+| CH9102F | 1.5.2021.8 | 0.5               | connected    | 2.24  | 4.98  | 2.43  |
+| CH9102F | 1.5.2021.8 | 0.5               | disconnected | 2.24  | 5.59  | 2.38  |
+| CH9102F | 2.0.2025.3 | 0.5               | connected    | 2.24  | 3.44  | 2.33  |
+| CH9102F | 2.0.2025.3 | 0.5               | disconnected | 2.25  | 5.55  | 2.45  |
+| CH340C  | 3.5.2019.1 | 1.5               | connected    | 1.98  | 2.98  | 2.44  |
+| CH340C  | 3.5.2019.1 | 1.5               | disconnected | 1.87  | 5.13  | 2.49  |
+| CH340C  | 3.9.2024.9 | 1.5               | connected    | 2.24  | 5.29  | 2.65  |
+| CH340C  | 3.9.2024.9 | 1.5               | disconnected | 2.08  | 5.26  | 2.59  |
+| COM1    |            | NA                | disconnected | 2.08  | 3.20  | 2.14  |
+
