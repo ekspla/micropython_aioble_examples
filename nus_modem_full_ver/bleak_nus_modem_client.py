@@ -12,6 +12,7 @@ from bleak import BleakScanner, BleakClient
 import os
 import time
 import datetime
+import platform
 
 TARGET_NAME = "mpy-nus"
 #SERVICE_UUID = "6e400001-b5a3-f393-e0a9-e50e24dcca9e"
@@ -224,6 +225,24 @@ class NUSModemClient:
 
                 await self.start_notify(client, TX_CHARACTERISTIC_UUID) # Notifications are stopped automatically on disconnect.
                 print(f"Notifications started")
+
+                # https://gist.github.com/ndeadly/7d27aa63e2f653a902a2474dbcbc08b3
+                # Set better connection parameters on Windows 11 where the API supports it
+                if platform.system() == 'Windows':
+                    version = platform.version()
+                    build_number = int(version.split('.')[-1])
+                    if build_number >= 22000:
+                        from bleak.backends.winrt.client import BleakClientWinRT
+                        from winrt.windows.devices.bluetooth import BluetoothLEPreferredConnectionParameters
+                        if isinstance(backend := client._backend, BleakClientWinRT):
+                            print('Requesting to change connection parameters...')
+                            backend._requester.request_preferred_connection_parameters(
+                                BluetoothLEPreferredConnectionParameters.throughput_optimized
+                                #BluetoothLEPreferredConnectionParameters.balanced
+                                #BluetoothLEPreferredConnectionParameters.power_optimized
+                            )
+                            await asyncio.sleep(1) # Wait for the request to be applied.
+                            print('Done.')
 
                 await self.fetch_file(client)
 
