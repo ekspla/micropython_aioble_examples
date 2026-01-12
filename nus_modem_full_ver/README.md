@@ -42,7 +42,7 @@ and summerized (in milliseconds) in the table below.  Because Windows 11 OS alwa
 *Balanced* (default) in idle, the other parameters should be specified just before the critical part.  
 
 |  | MaxConnectionInterval | MinConnectionInterval | Measured Interval | Throughput / kbps |
-| ------------------- | --- | --- | --- | 
+| ------------------- | --- | --- | --- | --- | 
 | ThroughputOptimized | 15.0 | 15.0 | 15.0 | 125.7 |
 | Balanced | 60.0 | 30.0 | 60.0 | 55.5 |
 | PowerOptimized | 180.0 | 90.0 | 180.0| 18.7 | 
