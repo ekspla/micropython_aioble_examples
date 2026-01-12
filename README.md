@@ -213,9 +213,9 @@ Update MAR 2025:
 [A full-featured version of the pair was also prepared](https://github.com/ekspla/micropython_aioble_examples/blob/main/nus_modem_full_ver/) 
 to test the higher throughput.  Using conn_intervals = 7.5 ms, STX (1024-byte block) and fragmentation of MTU = 209 via L2CAP 
 94.3 kbps was obtained.
-By using the client code for CPython/Bleak (`bleak_nus_modem_client.py`) on Win11/Intel Wireless with MTU=512, 
-125.7, 55.5 and 18.7 kbps were obtained for ThroughputOptimized, Balanced and PowerOptimized WinRT parameters, respectively.
-Further increase in throughput would require `LE Data Length Extension` and `LE 2M PHY`.
+By using the client code for CPython/Bleak (`nus_modem_full_ver/bleak_nus_modem_client.py`) on Win11/Intel Wireless with MTU=512, 
+125.7, 55.5 and 18.7 kbps were obtained for *ThroughputOptimized*, *Balanced* and *PowerOptimized* WinRT parameters, respectively.
+Further increase in throughput would require `LE Data Packet Length Extension` and `LE 2M PHY`.
   
 ## ESP32 chip as a USB bluetooth dongle (HCI H4) for use with unix-port (Linux) of micropython and aioble
 

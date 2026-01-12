@@ -15,7 +15,8 @@ that uses exclusively SOH blocks.
 
 `nus_modem_full_ver/bleak_nus_modem_client.py` is a CPython/[bleak](https://github.com/hbldh/bleak) version of 
 the client code compatible to both of the server codes as well.  It is tested on Linux and Windows 10/11. 
-On Windows 11, it tries to change connection parameters to *ThroughputOptimized* via WinRT (see below).  
+On Windows 11, it tries to change connection parameters to *ThroughputOptimized* (see below) via WinRT's 
+*RequestPreferredConnectionParameters* method.  
 
 The parameters stored in my Windows 11/Intel Wireless machine were read as followings  
 ``` shell
@@ -40,9 +41,9 @@ The parameters stored in my Windows 11/Intel Wireless machine were read as follo
 and summerized (in milliseconds) in the table below.  Because Windows 11 OS always tries to change to 
 *Balanced* (default) in idle, the other parameters should be specified just before the critical part.  
 
-|  | MaxConnectionInterval | MinConnectionInterval |
-| ------------------- | --- | --- | 
-| ThroughputOptimized | 15.0 | 15.0 |
-| Balanced | 60.0 | 30.0 |
-| PowerOptimized | 180.0 | 90.0 |
+|  | MaxConnectionInterval | MinConnectionInterval | Measured Interval | Throughput / kbps |
+| ------------------- | --- | --- | --- | 
+| ThroughputOptimized | 15.0 | 15.0 | 15.0 | 125.7 |
+| Balanced | 60.0 | 30.0 | 60.0 | 55.5 |
+| PowerOptimized | 180.0 | 90.0 | 180.0| 18.7 | 
 
