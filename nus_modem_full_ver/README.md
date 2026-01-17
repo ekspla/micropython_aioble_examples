@@ -1,12 +1,12 @@
-# nus_modem_full_version
+# nus_modem_full_featured_version
 
 The server-client pair of codes in this directory, which are modified version of those 
 [in the parent directory](https://github.com/ekspla/micropython_aioble_examples), 
 are capable of handling both of SOH (128) and STX (1024 byte) YMODEM blocks on Nordic UART service.  
 
 `nus_modem_full_ver/nus_modem_server.py` uses STX blocks in YMODEM if MTU greater than 23 (default) is 
-negotiated by MTU exchange, except for block number 0 (SOH) in which the size of the content (file name, size 
-and zero paddings) is very limited.  
+negotiated by MTU exchange, except for block number 0 (SOH) in which the size of the content (consisting of 
+file name, size and zero paddings) is very limited.  
 
 `nus_modem_full_ver/nus_modem_client.py` can handle both of the SOH and STX blocks by using the headers of the 
 blocks sent from the server, thus it is also compatible to 
