@@ -41,9 +41,9 @@ The parameters stored in my Windows 11/Intel Wireless machine were read as follo
 and summerized (in milliseconds) in the table below.  Because Windows 11 OS always tries to change to 
 *Balanced* (default) in idle, the other parameters should be specified just before the critical part.  
 
-|  | MaxConnectionInterval | MinConnectionInterval | Measured Interval | Throughput / kbps |
-| ------------------- | --- | --- | --- | --- | 
-| ThroughputOptimized | 15.0 | 15.0 | 15.0 | 125.7 |
-| Balanced | 60.0 | 30.0 | 60.0 | 55.5 |
-| PowerOptimized | 180.0 | 90.0 | 180.0| 18.7 | 
+|  | MaxConnectionInterval | MinConnectionInterval | ConnectionLatency | LinkTimeout | Measured Interval | Throughput / kbps |
+| ------------------- | --- | --- | --- | --- | --- | --- |
+| ThroughputOptimized | 15.0 | 15.0 | 0 | 2000 | 15.0 | 125.7 |
+| Balanced | 60.0 | 30.0 | 0 | 4000 | 60.0 | 55.5 |
+| PowerOptimized | 180.0 | 90.0 | 0 | 6000 | 180.0| 18.7 |
 
