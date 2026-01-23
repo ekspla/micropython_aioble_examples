@@ -43,7 +43,7 @@ and summerized (in milliseconds) in the table below.  Because Windows 11 OS alwa
 
 |  | MaxConnectionInterval | MinConnectionInterval | ConnectionLatency | LinkTimeout | Measured Interval | Throughput / kbps |
 | ------------------- | --- | --- | --- | --- | --- | --- |
-| ThroughputOptimized | 15.0 | 15.0 | 0 | 2000 | 15.0 | 125.7 |
-| Balanced | 60.0 | 30.0 | 0 | 4000 | 60.0 | 55.5 |
-| PowerOptimized | 180.0 | 90.0 | 0 | 6000 | 180.0| 18.7 |
+| ThroughputOptimized | 15.0 | 15.0 | 0 | 2000.0 | 15.0 | 125.7 |
+| Balanced | 60.0 | 30.0 | 0 | 4000.0 | 60.0 | 55.5 |
+| PowerOptimized | 180.0 | 90.0 | 0 | 6000.0 | 180.0| 18.7 |
 
