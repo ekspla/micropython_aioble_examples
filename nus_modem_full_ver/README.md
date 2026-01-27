@@ -51,5 +51,6 @@ and summerized (in milliseconds) in the table below.  Because Windows 11 OS alwa
 
 Bluetooth stacks on Windows OSs (10 and 11) always start connection with parameters of 60.0 ms interval, 0 latency and 9600 ms timeout.
 They seem to ignore `PeripheralPreferredConnectionParameters` in peripheral's `GenericAccess` and change the connection parameters very 
-frequently when connected. The only way to control the parameters from Windows central is `RequestPreferredConnectionParameters` as 
-described above. 
+frequently when connected. The only way to control the parameters from Windows central is *`RequestPreferredConnectionParameters`* as 
+described above. The good things is that Administrator's right is not required on Windows, while root or CAP_NET_ADMIN is required on 
+Linux/Bluez. 
