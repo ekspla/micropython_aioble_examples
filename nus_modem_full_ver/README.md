@@ -17,7 +17,14 @@ that uses exclusively SOH blocks.
 the client code compatible to both of the server codes as well.  It is tested on Linux and Windows 10/11. 
 On Windows 11, it tries to change connection parameters to *ThroughputOptimized* (see below) via WinRT's 
 *RequestPreferredConnectionParameters* method.  
+After a bit of modifications, the codes successfully worked on Linux/Bleak also with 
+[bumble backend](https://github.com/vChavezB/bleak-bumble) / [Google Bumble](https://github.com/google/bumble) 
+and TP-Link BT dongle \(UB400, v4.0, CSR8510 chip\) by using HCI over USB (HCI H2).  
 
+
+## Note
+
+### Windows/WinRT Backend
 The parameters stored in my Windows 11/Intel Wireless machine were read as followings  
 ``` shell
 >>> import platform
@@ -41,13 +48,11 @@ The parameters stored in my Windows 11/Intel Wireless machine were read as follo
 and summerized (in milliseconds) in the table below.  Because Windows 11 OS always tries to change to 
 *Balanced* (default) in idle, the other parameters should be specified just before the critical part.  
 
-|  | MaxConnectionInterval | MinConnectionInterval | ConnectionLatency | LinkTimeout | Measured Interval | Throughput / kbps |
+|  | Max Connection Interval | Min Connection Interval | Connection Latency | Link Timeout | Measured Interval | Throughput / kbps |
 | ------------------- | --- | --- | --- | --- | --- | --- |
 | ThroughputOptimized | 15.0 | 15.0 | 0 | 2000.0 | 15.0 | 125.7 |
 | Balanced | 60.0 | 30.0 | 0 | 4000.0 | 60.0 | 55.5 |
 | PowerOptimized | 180.0 | 90.0 | 0 | 6000.0 | 180.0| 18.7 |
-
-## Note
 
 Bluetooth stacks on Windows OSs (10 and 11) always start connection with parameters of 60.0 ms interval, 0 latency and 9600 ms timeout.
 They seem to ignore `Peripheral Preferred Connection Parameters` in peripheral's `Generic Access` and change the connection parameters very 
@@ -59,3 +64,36 @@ negotiation on BT4.0.
 
 The good things is that Administrator rights are not required on Windows/WinRT to change the parameters, while root or CAP_NET_ADMIN is 
 required on Linux/bluetoothd. 
+
+### Linux/Bumble Backend  
+
+The parameters were easily changed as followings.
+``` Python
+backend = client._backend
+mtu_size = await backend._peer.request_mtu(209)
+#mtu_size = await backend._peer.request_mtu(512)
+await asyncio.sleep(4)
+
+await self.start_notify(client, TX_CHARACTERISTIC_UUID)
+
+await backend._connection.update_parameters(
+    connection_interval_min = 6, # 7.5 ms
+    connection_interval_max = 6, # 7.5 ms
+    #connection_interval_min = 12, # 15.0 ms
+    #connection_interval_max = 12, # 15.0 ms
+    #connection_interval_min = 48, # 60.0 ms
+    #connection_interval_max = 48, # 60.0 ms
+    #connection_interval_min = 144, # 180.0 ms
+    #connection_interval_max = 144, # 180.0 ms
+    max_latency = 0, # 0
+    supervision_timeout = 200, # 200 * 10 = 2000 ms
+)
+await asyncio.sleep(1)
+```
+
+Measured Throughputs / kbps  
+
+| connection interval | 7.5 | 15.0 | 60.0 | 180.0 |
+| ------------------- | --- | --- | --- | --- |
+| mtu=209 | 117.9 | 110.9 | 85.7 | 22.4 |
+| mtu=512 (same as Win11) | 104.8 | 104.8 | 49.6 | 22.4 |
