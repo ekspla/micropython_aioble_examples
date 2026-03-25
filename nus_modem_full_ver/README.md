@@ -13,13 +13,14 @@ blocks sent from the server, thus it is also compatible to
 [the server code in the parent directory](https://github.com/ekspla/micropython_aioble_examples/blob/main/nus_modem_server.py) 
 that uses exclusively SOH blocks.  
 
-`nus_modem_full_ver/bleak_nus_modem_client.py` is a CPython/[bleak](https://github.com/hbldh/bleak) version of 
-the client code compatible to both of the server codes as well.  It is tested on Linux and Windows 10/11. 
+`nus_modem_full_ver/bleak_nus_modem_client.py` is a CPython/[Bleak](https://github.com/hbldh/bleak) version of 
+the client code compatible to both of the server codes as well.  It is tested on Linux (BlueZ backend) and 
+Windows 10/11 (WinRT backend). 
 On Windows 11, it tries to change connection parameters to *ThroughputOptimized* (see below) via WinRT's 
 *RequestPreferredConnectionParameters* method.  
 After a bit of modifications, the codes successfully worked on Linux/Bleak also with 
-[bumble backend](https://github.com/vChavezB/bleak-bumble) / [Google Bumble](https://github.com/google/bumble) 
-and TP-Link BT dongle \(UB400, v4.0, CSR8510 chip\) by using HCI over USB (HCI H2).  
+[Bumble backend](https://github.com/vChavezB/bleak-bumble) / [Google Bumble](https://github.com/google/bumble) 
+and TP-Link BT dongle \(UB400, v4.0, CSR8510 chip\) by using HCI over USB (HCI H2). See below for details. 
 
 
 ## Note
@@ -52,7 +53,7 @@ and summerized (in milliseconds) in the table below.  Because Windows 11 OS alwa
 | ------------------- | --- | --- | --- | --- | --- | --- |
 | ThroughputOptimized | 15.0 | 15.0 | 0 | 2000.0 | 15.0 | 125.7 |
 | Balanced | 60.0 | 30.0 | 0 | 4000.0 | 60.0 | 55.5 |
-| PowerOptimized | 180.0 | 90.0 | 0 | 6000.0 | 180.0| 18.7 |
+| PowerOptimized | 180.0 | 90.0 | 0 | 6000.0 | 180.0 | 18.7 |
 
 Bluetooth stacks on Windows OSs (10 and 11) always start connection with parameters of 60.0 ms interval, 0 latency and 9600 ms timeout.
 They seem to ignore `Peripheral Preferred Connection Parameters` in peripheral's `Generic Access` and change the connection parameters very 
@@ -67,7 +68,7 @@ required on Linux/bluetoothd.
 
 ### Linux/Bumble Backend  
 
-The parameters were easily changed as followings.
+In contrast to BlueZ backend, the parameters were easily changed as followings with the Bumble backend.
 ``` Python
 backend = client._backend
 mtu_size = await backend._peer.request_mtu(209)
@@ -95,5 +96,6 @@ Measured Throughputs / kbps
 
 | connection interval | 7.5 | 15.0 | 60.0 | 180.0 |
 | ------------------- | --- | --- | --- | --- |
+| mtu=23 | 28.6 |  |  |  |
 | mtu=209 | 117.9 | 110.9 | 85.7 | 22.4 |
 | mtu=512 (same as Win11) | 104.8 | 104.8 | 49.6 | 22.4 |
