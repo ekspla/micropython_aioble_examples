@@ -14,7 +14,7 @@ blocks sent from the server, thus it is also compatible to
 that uses exclusively SOH blocks.  
 
 `nus_modem_full_ver/bleak_nus_modem_client.py` is a CPython/[Bleak](https://github.com/hbldh/bleak) version of 
-the client code compatible to both of the server codes as well.  It is tested on Linux (BlueZ backend) and 
+the client code compatible to both of the server codes as well.  It was tested on Linux (BlueZ backend) and 
 Windows 10/11 (WinRT backend). 
 On Windows 11, it tries to change connection parameters to *ThroughputOptimized* (see below) via WinRT's 
 *RequestPreferredConnectionParameters* method.  
@@ -25,7 +25,16 @@ and TP-Link BT dongle \(UB400, v4.0, CSR8510 chip\) by using HCI over USB (HCI H
 
 ## Note
 
-### Windows/WinRT Backend
+### ESP32-S3 (240 MHz, `CONFIG_FREERTOS_HZ=1000`) / MicroPython  
+
+Measured Throughputs / kbps
+
+| connection interval | 7.5 |
+| ------------------- | --- |
+| mtu=23 | 27.7 |
+| mtu=209 | 94.3 |
+
+### Windows/WinRT Backend (mtu=512)
 The parameters stored in my Windows 11/Intel Wireless machine were read as followings  
 ``` shell
 >>> import platform
