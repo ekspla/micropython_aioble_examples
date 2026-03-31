@@ -87,14 +87,15 @@ await asyncio.sleep(4)
 await self.start_notify(client, TX_CHARACTERISTIC_UUID)
 
 await backend._connection.update_parameters(
+    # Valid for bumble==0.0.211; the format has been changed to ms in the later versions.
     connection_interval_min = 6, # 7.5 ms
-    connection_interval_max = 6, # 7.5 ms
+    connection_interval_max = 6,
     #connection_interval_min = 12, # 15.0 ms
-    #connection_interval_max = 12, # 15.0 ms
+    #connection_interval_max = 12,
     #connection_interval_min = 48, # 60.0 ms
-    #connection_interval_max = 48, # 60.0 ms
+    #connection_interval_max = 48,
     #connection_interval_min = 144, # 180.0 ms
-    #connection_interval_max = 144, # 180.0 ms
+    #connection_interval_max = 144,
     max_latency = 0, # 0
     supervision_timeout = 200, # 200 * 10 = 2000 ms
 )
