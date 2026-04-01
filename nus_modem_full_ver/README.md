@@ -117,3 +117,7 @@ it shows a bit less performance though.
 | connection interval | 7.5 | 15.0 | 60.0 | 180.0 |
 | ------------------- | --- | --- | --- | --- |
 | mtu=209 | 78.5 | 70.1 | 24.2 | 7.8 |
+
+Update:  
+With the latest (Nov 2025) firmware extracted from Windows driver of TP-Link, 
+throughputs were similar to those of UB400 (CSR8510 chip).
