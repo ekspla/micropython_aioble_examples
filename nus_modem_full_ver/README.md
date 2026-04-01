@@ -109,3 +109,7 @@ Measured Throughputs / kbps
 | mtu=23 | 28.6 | 20.7 | 8.5 | 2.8 |
 | mtu=209 | 117.9 | 110.9 | 85.7 | 22.4 |
 | mtu=512 (same as Win11) | 104.8 | 104.8 | 49.6 | 22.4 |
+
+The code also successfully worked by using TP-Link UB500 (BT v5.4, RTL8761 chip) with 
+`rtl8761b_fw.bin/rtl8761b_config.bin` (not the default RTL8761BU firmwares); 
+it shows a bit less performance though.
