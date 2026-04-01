@@ -112,4 +112,8 @@ Measured Throughputs / kbps
 
 The code also successfully worked by using TP-Link UB500 (BT v5.4, RTL8761 chip) with 
 `rtl8761b_fw.bin/rtl8761b_config.bin` (not the default RTL8761BU firmwares); 
-it shows a bit less performance though.
+it shows a bit less performance though.  
+
+| connection interval | 7.5 | 15.0 | 60.0 | 180.0 |
+| ------------------- | --- | --- | --- | --- |
+| mtu=209 | 78.5 | 70.1 | 24.2 | 7.8 |
