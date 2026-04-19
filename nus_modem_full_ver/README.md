@@ -19,7 +19,7 @@ Windows 10/11 (WinRT backend).
 On Windows 11, it tries to change connection parameters to *ThroughputOptimized* (see below) via WinRT's 
 *RequestPreferredConnectionParameters* method.  
 After a bit of modifications, the codes successfully worked on Linux/Bleak also with 
-[Bumble backend](https://github.com/vChavezB/bleak-bumble) / [Google Bumble](https://github.com/google/bumble) 
+[Bumble backend](https://github.com/ekspla/bleak-bumble_dev_host_mode) / [Google Bumble](https://github.com/google/bumble) 
 and TP-Link BT dongle \(UB400, v4.0, CSR8510 chip\) by using HCI over USB (HCI H2). See below for details. 
 
 
@@ -75,9 +75,13 @@ negotiation on BT4.0.
 The good things is that Administrator rights are not required on Windows/WinRT to change the parameters, while root or CAP_NET_ADMIN is 
 required on Linux/bluetoothd. 
 
-### Linux/Bumble Backend  
+### Linux (and also Windows) with Bumble Backend  
 
-In contrast to BlueZ backend, the parameters were easily changed as followings with the Bumble backend.
+In contrast to BlueZ backend, the parameters were easily changed as followings with the Bumble backend.  
+
+Thanks to the cross-platform [Google-Bumble's](https://github.com/google/bumble) Bluetooth host stack implemented in 
+CPython, the exact same code confirmed to work on Windows 7 sp1 by using [VxKex](https://github.com/i486/VxKex).  
+
 ``` Python
 backend = client._backend
 mtu_size = await backend._peer.request_mtu(209)
