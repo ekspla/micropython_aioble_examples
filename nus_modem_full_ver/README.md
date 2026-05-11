@@ -134,8 +134,8 @@ the server and the client.  These *virtual controllers* may be useful in tests a
 We can also use a sniffer built in Bumble. *Absolutely no hardware*.  
 
 - Instead of PTYs, I used a kernel module of [tty0tty](https://github.com/freemed/tty0tty) to 
-emulate serial ports with hardware flow control. In this case, /dev/tnt0 -- /dev/tnt1, ..., 
-/dev/tnt6 -- /dev/tnt7 were tied together. On Windows, use [com0com](https://com0com.sourceforge.net/).  
+emulate serial ports with hardware flow control. In this case, /dev/tnt0 -- /dev/tnt1 and 
+/dev/tnt2 -- /dev/tnt3 were, respectively, paired together. Use [com0com](https://com0com.sourceforge.net/) on Windows.  
 ```shell
 ls -la /dev/tnt*
 crw-rw----. 1 root dialout 241, 0 May 10 13:29 /dev/tnt0
