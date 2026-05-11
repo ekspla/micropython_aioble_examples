@@ -126,3 +126,64 @@ it shows a bit less performance though.
 Update:  
 With the latest (Nov 2025) firmware extracted from Windows driver of TP-Link, 
 throughputs were similar to those of UB400 (CSR8510 chip).
+
+### Virtual Server and Client on Bumble's `LocalLink()`  
+
+Thinking the other way around, we can make use of Bumble's virtual HCI H4 controllers for both 
+the server and the client.  These *virtual controllers* may be useful in tests and developments. 
+We can also use a sniffer built in Bumble. *Absolutely no hardware*.  
+
+- Instead of PTYs, I used a kernel module of [tty0tty](https://github.com/freemed/tty0tty) to 
+emulate serial ports with hardware flow control. In this case, /dev/tnt0 -- /dev/tnt1, ..., 
+/dev/tnt6 -- /dev/tnt7 were tied together. On Windows, use [com0com](https://com0com.sourceforge.net/).  
+```shell
+ls -la /dev/tnt*
+crw-rw----. 1 root dialout 241, 0 May 10 13:29 /dev/tnt0
+crw-rw----. 1 root dialout 241, 1 May 10 13:29 /dev/tnt1
+crw-rw----. 1 root dialout 241, 2 May 10 13:29 /dev/tnt2
+crw-rw----. 1 root dialout 241, 3 May 10 13:29 /dev/tnt3
+crw-rw----. 1 root dialout 241, 4 May 10 12:49 /dev/tnt4
+crw-rw----. 1 root dialout 241, 5 May 10 12:49 /dev/tnt5
+crw-rw----. 1 root dialout 241, 6 May 10 12:49 /dev/tnt6
+crw-rw----. 1 root dialout 241, 7 May 10 12:49 /dev/tnt7
+```
+- Run two virtual HCI controllers for `/dev/tnt1` and `/dev/tnt3` on a Bumble's `LocalLink()`.  
+```shell
+python lib/python3.12/site-packages/bumble/apps/controllers.py \
+serial:/dev/tnt1,1000000,rtscts \
+serial:/dev/tnt3,1000000,rtscts
+```
+
+- Open the second console and run the server.  
+``` python
+pyenv shell micropython-1.23.0
+MICROPYBTUART=/dev/tnt0 python
+MicroPython v1.23.0 on 2024-11-18; linux [GCC 11.5.0] version
+Use Ctrl-D to exit, Ctrl-E for paste mode
+>>> from bluetooth import BLE
+>>> BLE().active(1)
+True
+>>>
+>>> import nus_modem_server
+>>> nus_modem_server.start()
+```
+
+- Finally, open the third console and run the client on CPython/Bleak-Bumble. 
+This client can be another MPY-Linux with the aioble version of client.  
+``` python
+BLEAK_BUMBLE = "serial:/dev/tnt2,1000000,rtscts"
+BLEAK_BUMBLE_HOST = "1"
+python bleak_nus_modem_client.py
+Scanning for Bluetooth devices...
+ BLEDevice(E3:C3:5C:4A:77:A4, mpy-nus) with AdvertisementData(local_name='mpy-nus', service_uuids=['6e400001-b5a3-f393-e0a9-e50e24dcca9e'], tx_power=127, rssi=-50)
+Found target device: E3:C3:5C:4A:77:A4: mpy-nus
+Connected to E3:C3:5C:4A:77:A4: mpy-nus
+Device Name: mpy-nus
+Client Name: mpy-nus
+MTU 23
+mtu: 209
+Notifications started
+Mon May 10 13:29:17 2026
+Successfully wrote combined data to test.bin  # 235,723 bytes * 8 bit/byte / 13 sec = 145.1 kbps
+Mon May 10 13:29:30 2026
+```
