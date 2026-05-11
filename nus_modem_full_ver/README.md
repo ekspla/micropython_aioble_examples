@@ -169,7 +169,7 @@ True
 ```
 
 - Finally, open the third console and run the client on CPython/Bleak-Bumble. 
-This client can be another MPY-Linux with the aioble version of client.  
+This can be another MPY-Linux with the aioble version of client.  
 ``` python
 BLEAK_BUMBLE = "serial:/dev/tnt2,1000000,rtscts"
 BLEAK_BUMBLE_HOST = "1"
