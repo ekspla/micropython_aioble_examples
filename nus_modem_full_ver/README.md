@@ -183,7 +183,7 @@ Client Name: mpy-nus
 MTU 23
 mtu: 209
 Notifications started
-Mon May 10 13:29:17 2026
+Sun May 10 13:29:17 2026
 Successfully wrote combined data to test.bin  # 235,723 bytes * 8 bit/byte / 13 sec = 145.1 kbps
-Mon May 10 13:29:30 2026
+Sun May 10 13:29:30 2026
 ```
