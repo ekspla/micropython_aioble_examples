@@ -147,14 +147,17 @@ crw-rw----. 1 root dialout 241, 5 May 10 12:49 /dev/tnt5
 crw-rw----. 1 root dialout 241, 6 May 10 12:49 /dev/tnt6
 crw-rw----. 1 root dialout 241, 7 May 10 12:49 /dev/tnt7
 ```
-- Run two virtual HCI controllers for `/dev/tnt1` and `/dev/tnt3` on a Bumble's `LocalLink()`.  
+- Run two virtual HCI controllers for `/dev/tnt1` and `/dev/tnt3` on a Bumble's `LocalLink()`.  A real / physical 
+serial port may be used if a real HCI-H4 host (e.g. bare metal MicroPython) is to be attached.
 ```shell
 python lib/python3.12/site-packages/bumble/apps/controllers.py \
 serial:/dev/tnt1,1000000,rtscts \
 serial:/dev/tnt3,1000000,rtscts
 ```
 
-- Open the second console and run the server.  
+- Open the second console and run the server.  I used the unix-port of MicroPython [which was built 
+for the ESP32 dongle as shown in here](https://github.com/ekspla/micropython_aioble_examples/tree/main#esp32-chip-as-a-usb-bluetooth-dongle-hci-h4-for-use-with-unix-port-linux-of-micropython-and-aioble), 
+but it was attached to *the virtual controller* this time.  
 ``` python
 pyenv shell micropython-1.23.0
 MICROPYBTUART=/dev/tnt0 python
