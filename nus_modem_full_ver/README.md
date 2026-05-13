@@ -127,15 +127,15 @@ Update:
 With the latest (Nov 2025) firmware extracted from Windows driver of TP-Link, 
 throughputs were similar to those of UB400 (CSR8510 chip).
 
-### Virtual Server and Client on Bumble's `LocalLink()`  
+### Virtual Server and Client on Bumble's [`LocalLink()`](https://google.github.io/bumble/index.html#link)  
 
-Thinking the other way around, we can make use of Bumble's virtual HCI H4 controllers for both 
-the server and the client.  These *virtual controllers* may be useful in tests and developments. 
+Thinking the other way around, we can make use of [Bumble's](https://github.com/google/bumble) virtual HCI H4 
+controllers for both the server and the client.  These *virtual controllers* may be useful in tests and developments. 
 We can also use a sniffer built in Bumble. *Absolutely no hardware*.  
 
 - Instead of PTYs, I used a kernel module of [tty0tty](https://github.com/freemed/tty0tty) to 
-emulate serial ports with hardware flow control. In this case, /dev/tnt0 -- /dev/tnt1 and 
-/dev/tnt2 -- /dev/tnt3 were, respectively, paired together. Use [com0com](https://com0com.sourceforge.net/) on Windows.  
+emulate serial ports with hardware flow control. In this case, `/dev/tnt0` -- `/dev/tnt1` and `/dev/tnt2` -- `/dev/tnt3` 
+were, respectively, paired together. On Windows, use [com0com](https://com0com.sourceforge.net/).  
 ```shell
 ls -la /dev/tnt*
 crw-rw----. 1 root dialout 241, 0 May 10 13:29 /dev/tnt0
@@ -147,7 +147,7 @@ crw-rw----. 1 root dialout 241, 5 May 10 12:49 /dev/tnt5
 crw-rw----. 1 root dialout 241, 6 May 10 12:49 /dev/tnt6
 crw-rw----. 1 root dialout 241, 7 May 10 12:49 /dev/tnt7
 ```
-- Run two virtual HCI controllers for `/dev/tnt1` and `/dev/tnt3` on a Bumble's `LocalLink()`.  A real / physical 
+- **Run two virtual HCI controllers** for `/dev/tnt1` and `/dev/tnt3` on a Bumble's `LocalLink()`.  A real / physical 
 serial port may be used if a real HCI-H4 host (e.g. bare metal MicroPython) is to be attached.
 ```shell
 python lib/python3.12/site-packages/bumble/apps/controllers.py \
@@ -155,7 +155,7 @@ serial:/dev/tnt1,1000000,rtscts \
 serial:/dev/tnt3,1000000,rtscts
 ```
 
-- Open the second console and run the server.  I used the unix-port of MicroPython [which was built 
+- Open the second console and **run the server**.  I used the unix-port of MicroPython \(MPY-Linux\) [which was built 
 for the ESP32 dongle as shown in here](https://github.com/ekspla/micropython_aioble_examples/tree/main#esp32-chip-as-a-usb-bluetooth-dongle-hci-h4-for-use-with-unix-port-linux-of-micropython-and-aioble), 
 but it was attached to *the virtual controller* this time.  
 ``` python
@@ -171,8 +171,8 @@ True
 >>> nus_modem_server.start()
 ```
 
-- Finally, open the third console and run the client on CPython/Bleak-Bumble. 
-This can be another MPY-Linux with the aioble version of client.  
+- Finally, open the third console and **run the client** on CPython/[Bleak-Bumble](https://github.com/ekspla/bleak-bumble_dev_host_mode). 
+This can also be the aioble version of client on another MPY-Linux.  
 ``` python
 BLEAK_BUMBLE = "serial:/dev/tnt2,1000000,rtscts"
 BLEAK_BUMBLE_HOST = "1"
