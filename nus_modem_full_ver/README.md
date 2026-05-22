@@ -193,8 +193,10 @@ Sun May 10 13:29:30 2026
 
 ### Use Bumble's HCI Bridge to convert a USB BT dongle (HCI H2) to serial (HCI H4) transport  
 
-This may be another useful case of Bumble in MicroPython.  We know that NimBLE supports HCI H4 (serial) while BT Stack 
-supports both of HCI H4 and HCI H2 (USB). Use [Bumble's HCI Bridge]() for NimBLE with HCI H2 controllers.  
+This may be another useful case of Bumble in MicroPython. We know that [Apache/NimBLE](https://github.com/apache/mynewt-nimble) 
+supports HCI H4 (serial) while [BlueKitchen/BTstack](https://github.com/bluekitchen/btstack) supports both of HCI H4 and 
+HCI H2 (USB). 
+Use [Bumble's HCI Bridge](https://google.github.io/bumble/apps_and_tools/hci_bridge.html) for NimBLE with HCI H2 controllers.  
 
 In the first console, run the **HCI bridge**.  `/dev/tnt0`--`/dev/tnt1` is a virtual null modem cable and a USB BT dongle 
 (UB400, TP-Link, CSR8510 chip) is attached to `USB:0` in this case.  
@@ -206,7 +208,7 @@ python lib/python3.12/site-packages/bumble/apps/hci_bridge.py serial:/dev/tnt1,1
 >>> connected
 ```  
 
-From the second console, run **MPY-Linux with NimBLE stack**.  
+From the second console, attach *the converted serial transport* to unix-port of MicroPython with NimBLE.  
 ``` Python
 MICROPYBTUART=/dev/tnt0 micropython
 MicroPython v1.23.0 on 2024-11-18; linux [GCC 11.5.0] version
@@ -223,3 +225,4 @@ MTU: 209
 Successfully wrote combined data to test.bin  # 235,723 bytes * 8 / 18 sec = 104.8 kbps
 >>>
 ```
+HCI bridge may be also useful to convert TCP or UDP transport to serial when running MicroPython on WSL or WSL2.
