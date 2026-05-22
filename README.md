@@ -307,7 +307,8 @@ in this repository.
 Additional notes:  
  - You can also use this USB dongle from the other softwares such as [BlueZ](https://github.com/bluez/bluez), 
 [BTstack](https://github.com/bluekitchen/btstack) and 
-[Google Bumble](https://github.com/google/bumble) because the APIs of HCI H4 are common.  
+[Google Bumble](https://github.com/google/bumble) because the APIs of HCI H4 are common. A few example of MicroPython with Bumble is also shown in 
+[here](https://github.com/ekspla/micropython_aioble_examples/tree/main/nus_modem_full_ver).  
 
  - It may be wise for Windows users to stick on to the old WCH's driver version (V3.5 on 2019), while the latest one works great on Linux as shown above. 
 [As reported in this forum](https://answers.microsoft.com/en-us/windows/forum/all/usb-serial-ch340-chipset-not-working-after-windows/88b0ab19-9e1b-46bb-82d4-f806e34b2ed9),
