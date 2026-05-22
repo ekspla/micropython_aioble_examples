@@ -190,3 +190,36 @@ Sun May 10 13:29:17 2026
 Successfully wrote combined data to test.bin  # 235,723 bytes * 8 bit/byte / 13 sec = 145.1 kbps
 Sun May 10 13:29:30 2026
 ```
+
+### Use Bumble's HCI Bridge to convert a USB BT dongle (HCI H2) to serial (HCI H4) transport  
+
+This may be another useful case of Bumble in MicroPython.  We know that NimBLE supports HCI H4 (serial) while BT Stack 
+supports both of HCI H4 and HCI H2 (USB). Use [Bumble's HCI Bridge]() for NimBLE with HCI H2 controllers.  
+
+In the first console, run the **HCI bridge**.  `/dev/tnt0`--`/dev/tnt1` is a virtual null modem cable and a USB BT dongle 
+(UB400, TP-Link, CSR8510 chip) is attached to `USB:0` in this case.  
+``` Python
+python lib/python3.12/site-packages/bumble/apps/hci_bridge.py serial:/dev/tnt1,1000000,rtscts usb:0
+>>> connecting to HCI...
+>>> connected
+>>> connecting to HCI...
+>>> connected
+```  
+
+From the second console, run **MPY-Linux with NimBLE stack**.  
+``` Python
+MICROPYBTUART=/dev/tnt0 micropython
+MicroPython v1.23.0 on 2024-11-18; linux [GCC 11.5.0] version
+Use Ctrl-D to exit, Ctrl-E for paste mode
+>>> from bluetooth import BLE
+>>> BLE().active(1)
+True
+>>>
+>>> import nus_modem_client
+>>> nus_modem_client.start()
+Found target device: mpy-nus - Device(ADDR_PUBLIC, 34:85:18:xx:yy:zz)
+Connecting to Device(ADDR_PUBLIC, 34:85:18:xx:yy:zz)
+MTU: 209
+Successfully wrote combined data to test.bin  # 235,723 bytes * 8 / 18 sec = 104.8 kbps
+>>>
+```
