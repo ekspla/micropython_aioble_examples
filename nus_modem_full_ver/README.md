@@ -19,9 +19,10 @@ Windows 10/11 (WinRT backend).
 On Windows 11, it tries to change connection parameters to *ThroughputOptimized* (see below) via WinRT's 
 *RequestPreferredConnectionParameters* method.  
 
-After a bit of modification, the code successfully worked on Linux/Bleak also with 
+After a bit of modification, the code successfully worked on Linux/Bleak and Windows/Bleak also with 
 [Bumble backend](https://github.com/ekspla/bleak-bumble_dev_host_mode) / [Google Bumble](https://github.com/google/bumble) 
-and TP-Link BT dongle \(UB400, v4.0, CSR8510 chip\) by using HCI over USB (HCI H2). See below for details. 
+and TP-Link BT dongles \(UB400, v4.0, CSR8510 chip\ and UB500, v5.3, RTL8761 chip) by using HCI over USB (HCI H2). 
+See below for details. 
 
 
 ## Note
@@ -135,7 +136,7 @@ We can also use a sniffer built in Bumble. *Absolutely no hardware*.
 
 - Instead of PTYs, I used a kernel module of [tty0tty](https://github.com/freemed/tty0tty) to 
 emulate serial ports with hardware flow control. In this case, `/dev/tnt0` -- `/dev/tnt1` and `/dev/tnt2` -- `/dev/tnt3` 
-were, respectively, paired together. On Windows, use [com0com](https://com0com.sourceforge.net/).  
+were, respectively, the virtual null modem cables. On Windows, use [com0com](https://com0com.sourceforge.net/).  
 ```shell
 ls -la /dev/tnt*
 crw-rw----. 1 root dialout 241, 0 May 10 13:29 /dev/tnt0
