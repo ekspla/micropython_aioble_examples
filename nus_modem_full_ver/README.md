@@ -127,7 +127,7 @@ it shows a bit less performance though.
 Update:  
 ~~With the latest (Nov 2025) firmware extracted from Windows driver of TP-Link,~~ 
 ~~throughputs were similar to those of UB400 (CSR8510 chip).~~  
-After testing with firmwares of 0x9dc6d922, 0xdcc6b3a8, 0xddd5c761 and 0x2afb4be5, 
+After testing with firmwares of 0xdfc6d922, 0x9dc6d922, 0xdcc6b3a8, 0xddd5c761 and 0x2afb4be5, 
 I still do not see why my RTL8761B shows less performance than those of CSR8510A10.
 
 ### Virtual Server and Client on Bumble's [`LocalLink()`](https://google.github.io/bumble/index.html#link)  
