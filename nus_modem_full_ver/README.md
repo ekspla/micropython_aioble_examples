@@ -128,7 +128,13 @@ Update:
 ~~With the latest (Nov 2025) firmware extracted from Windows driver of TP-Link,~~ 
 ~~throughputs were similar to those of UB400 (CSR8510 chip).~~  
 After testing with firmwares of 0xdfc6d922, 0x9dc6d922, 0xdcc6b3a8, 0xddd5c761 and 0x2afb4be5, 
-I still do not see why my RTL8761B shows less performance than those of CSR8510A10.
+I still do not see why my RTL8761B shows less performance than those of CSR8510A10.  
+
+Update2:  
+I found that my RTL8761B dongle (UB500 V2.0, TP-Link) was more sensitive than CSR8510A10 (UB400, TP-Link) 
+to RF noise at 2.4 GHz.  
+The issue could happen even if it was attached to a native USB 2.0 port instead of a port in USB 2.0 hub. 
+Probably, the dongle was poorly designed in respect to noise immunity.  
 
 ### Virtual Server and Client on Bumble's [`LocalLink()`](https://google.github.io/bumble/index.html#link)  
 
